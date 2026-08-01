@@ -1,8 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connectOptions } from '../mock';
 import { Home, Building2, Landmark, ArrowRight } from 'lucide-react';
 
 const iconMap = { Home, Building2, Landmark };
+const hrefMap = {
+  home: '/connect/home',
+  business: '/connect/business',
+  estate: '/connect/estate',
+};
 
 const ConnectOptions = () => {
   return (
@@ -37,9 +43,9 @@ const ConnectOptions = () => {
           {connectOptions.map((c) => {
             const Icon = iconMap[c.icon];
             return (
-              <a
+              <Link
                 key={c.id}
-                href={c.href}
+                to={hrefMap[c.id]}
                 className="group relative overflow-hidden rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-imagine-red/60 transition-all duration-500 card-glow"
               >
                 <div className="aspect-[16/10] overflow-hidden">
@@ -64,7 +70,7 @@ const ConnectOptions = () => {
                     {c.cta} <ArrowRight size={16} />
                   </div>
                 </div>
-              </a>
+              </Link>
             );
           })}
         </div>

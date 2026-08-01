@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import {
   Tag,
@@ -21,9 +22,9 @@ const slides = [
     highlight: 'a FREE month + Free WiFi 6 Router',
     footnote: '*Offer limited to the first 500 new customers.',
     ctas: [
-      { label: 'Find your deal', icon: Tag, style: 'primary' },
-      { label: 'Recharge prepaid', icon: Repeat, style: 'outline' },
-      { label: 'Imagine website', icon: Home, style: 'outline' },
+      { label: 'Find your deal', icon: Tag, style: 'primary', to: '/connect/home' },
+      { label: 'Check coverage', icon: Repeat, style: 'outline', to: '/coverage' },
+      { label: 'Talk to sales', icon: Home, style: 'outline', to: '/contact' },
     ],
     image:
       'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=1400&q=80',
@@ -39,9 +40,9 @@ const slides = [
     body:
       'No contracts. No credit checks. No cancellation fees. Recharge and go.',
     ctas: [
-      { label: 'Recharge now', icon: Repeat, style: 'primary' },
-      { label: 'Buy a bundle', icon: Tag, style: 'outline' },
-      { label: 'How prepaid works', icon: Home, style: 'outline' },
+      { label: 'Browse packages', icon: Repeat, style: 'primary', to: '/connect/home' },
+      { label: 'Check coverage', icon: Tag, style: 'outline', to: '/coverage' },
+      { label: 'How prepaid works', icon: Home, style: 'outline', to: '/services/fibre' },
     ],
     image:
       'https://images.unsplash.com/photo-1640622304233-7335e936f11b?w=1400&q=80',
@@ -57,8 +58,8 @@ const slides = [
     body:
       'Share the network you love. Earn rewards for every friend that gets connected.',
     ctas: [
-      { label: 'Register now', icon: Gift, style: 'primary' },
-      { label: 'How it works', icon: Tag, style: 'outline' },
+      { label: 'Register now', icon: Gift, style: 'primary', to: '/contact' },
+      { label: 'How it works', icon: Tag, style: 'outline', to: '/services/fibre' },
     ],
     footnote: 'Terms and conditions apply.',
     image:
@@ -77,6 +78,7 @@ const promoCards = [
     title: 'Get a FREE Netflix voucher worth R250',
     body: 'On selected uncapped fibre packages. First 1,000 customers only.',
     cta: 'Find your deal',
+    to: '/connect/home',
     icon: Gift,
     bg: 'from-[#E4002B] to-[#F5375A]',
     text: 'white',
@@ -87,6 +89,7 @@ const promoCards = [
     title: 'Prepaid Fibre bundles from R99',
     body: 'No contracts. Recharge in seconds and stay online.',
     cta: 'Buy a bundle',
+    to: '/connect/home',
     icon: Repeat,
     bg: 'from-[#0B1926] to-[#12253A]',
     text: 'white',
@@ -97,6 +100,7 @@ const promoCards = [
     title: 'Business Fibre with SLA-backed uptime',
     body: 'Empowering SMEs and enterprises to do more for less.',
     cta: 'Talk to sales',
+    to: '/connect/business',
     icon: PhoneCall,
     bg: 'from-white to-gray-50',
     text: 'ink',
@@ -203,6 +207,7 @@ const Hero = () => {
                   return (
                     <Button
                       key={idx}
+                      asChild
                       className={`h-12 rounded-full pl-2 pr-6 font-semibold transition-all group min-w-[220px] justify-start ${
                         isPrimary
                           ? 'text-white hover:brightness-110 shadow-lg'
@@ -217,14 +222,16 @@ const Hero = () => {
                           : {}
                       }
                     >
-                      <span
-                        className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${
-                          isPrimary ? 'bg-white/25' : 'bg-white/10 group-hover:bg-[#0B1926]/10'
-                        }`}
-                      >
-                        <Icon size={14} />
-                      </span>
-                      {c.label}
+                      <Link to={c.to || '/coverage'}>
+                        <span
+                          className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${
+                            isPrimary ? 'bg-white/25' : 'bg-white/10 group-hover:bg-[#0B1926]/10'
+                          }`}
+                        >
+                          <Icon size={14} />
+                        </span>
+                        {c.label}
+                      </Link>
                     </Button>
                   );
                 })}
@@ -287,9 +294,10 @@ const Hero = () => {
               const Icon = p.icon;
               const isLight = p.text === 'ink';
               return (
-                <div
+                <Link
                   key={p.id}
-                  className={`group relative overflow-hidden rounded-3xl bg-gradient-to-br ${p.bg} p-6 shadow-xl card-glow border ${
+                  to={p.to}
+                  className={`group relative overflow-hidden rounded-3xl bg-gradient-to-br ${p.bg} p-6 shadow-xl card-glow border block ${
                     isLight ? 'border-gray-100' : 'border-white/10'
                   }`}
                 >
@@ -337,7 +345,7 @@ const Hero = () => {
                       &rarr;
                     </span>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

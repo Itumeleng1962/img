@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { featuredDeals } from '../mock';
 import { Button } from './ui/button';
 import {
@@ -36,12 +37,12 @@ const Deals = () => {
               <span className="text-imagine-red"> real life.</span>
             </h2>
           </div>
-          <a
-            href="#all-packages"
+          <Link
+            to="/connect/home"
             className="inline-flex items-center gap-2 text-imagine-red font-semibold hover:gap-3 transition-all"
           >
             Explore all packages <ArrowRight size={16} />
-          </a>
+          </Link>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -106,13 +107,14 @@ const Deals = () => {
                 </ul>
 
                 <Button
+                  asChild
                   className={`w-full mt-6 h-11 rounded-full font-semibold ${
                     d.popular
                       ? 'bg-imagine-red hover:bg-[#c40025] text-white'
                       : 'bg-[#0f1720] hover:bg-imagine-red text-white'
                   }`}
                 >
-                  Get this deal
+                  <Link to="/contact">Get this deal</Link>
                 </Button>
               </div>
             </div>

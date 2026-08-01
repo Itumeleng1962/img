@@ -1,11 +1,78 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Logo from './Logo';
-import { footerLinks } from '../mock';
-import { Facebook, Twitter, Instagram, Linkedin, Send } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Send, Check } from 'lucide-react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
+import { useToast } from '../hooks/use-toast';
+
+const footerGroups = [
+  {
+    title: 'Company',
+    links: [
+      { label: 'About Imagine', to: '/' },
+      { label: 'Newsroom', to: '/news' },
+      { label: 'Blitz Fibre', to: '/connect/estate' },
+      { label: 'Careers', to: '/contact' },
+    ],
+  },
+  {
+    title: 'Services',
+    links: [
+      { label: 'Home Fibre', to: '/connect/home' },
+      { label: 'Business Fibre', to: '/connect/business' },
+      { label: 'VoIP Voice', to: '/services/voice' },
+      { label: 'IT Support', to: '/services/support' },
+    ],
+  },
+  {
+    title: 'Support',
+    links: [
+      { label: 'Contact Us', to: '/contact' },
+      { label: 'FAQ', to: '/contact' },
+      { label: 'Coverage Map', to: '/coverage' },
+      { label: 'Webmail', to: '/contact' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { label: 'Terms of Service', to: '/contact' },
+      { label: 'Privacy Policy', to: '/contact' },
+      { label: 'AUP', to: '/contact' },
+      { label: 'RICA Compliance', to: '/contact' },
+    ],
+  },
+];
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const { toast } = useToast();
+
+  const subscribe = (e) => {
+    e.preventDefault();
+    if (!email.includes('@')) {
+      toast({
+        title: 'Invalid email',
+        description: 'Please enter a valid email address.',
+      });
+      return;
+    }
+    const list = JSON.parse(
+      localStorage.getItem('imagine_subscribers') || '[]'
+    );
+    list.push({ email, ts: Date.now() });
+    localStorage.setItem('imagine_subscribers', JSON.stringify(list));
+    setSubscribed(true);
+    setEmail('');
+    toast({
+      title: 'Subscribed!',
+      description: 'Watch your inbox for deals and coverage updates.',
+    });
+    setTimeout(() => setSubscribed(false), 4000);
+  };
+
   return (
     <footer className="bg-[#0a1018] text-gray-300">
       {/* Newsletter strip */}
@@ -19,16 +86,27 @@ const Footer = () => {
               Deals, coverage updates and new networks — straight to your inbox.
             </p>
           </div>
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="flex flex-col sm:flex-row gap-3"
-          >
+          <form onSubmit={subscribe} className="flex flex-col sm:flex-row gap-3">
             <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Your email"
               className="h-12 rounded-full bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus-visible:ring-imagine-red/40"
             />
-            <Button className="h-12 rounded-full px-6 bg-imagine-red hover:bg-[#c40025] text-white font-semibold">
-              Subscribe <Send size={14} className="ml-1" />
+            <Button
+              type="submit"
+              className="h-12 rounded-full px-6 bg-imagine-red hover:bg-[#c40025] text-white font-semibold"
+            >
+              {subscribed ? (
+                <>
+                  <Check size={14} className="mr-1" /> Subscribed
+                </>
+              ) : (
+                <>
+                  Subscribe <Send size={14} className="ml-1" />
+                </>
+              )}
             </Button>
           </form>
         </div>
@@ -48,6 +126,7 @@ const Footer = () => {
               <a
                 key={i}
                 href="#"
+                onClick={(e) => e.preventDefault()}
                 className="w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-imagine-red hover:border-imagine-red flex items-center justify-center transition-colors"
                 aria-label="social link"
               >
@@ -57,20 +136,20 @@ const Footer = () => {
           </div>
         </div>
 
-        {Object.entries(footerLinks).map(([group, items]) => (
-          <div key={group}>
+        {footerGroups.map((g) => (
+          <div key={g.title}>
             <div className="text-xs font-bold uppercase tracking-widest text-white mb-4">
-              {group}
+              {g.title}
             </div>
             <ul className="space-y-2.5">
-              {items.map((l) => (
-                <li key={l}>
-                  <a
-                    href="#"
+              {g.links.map((l) => (
+                <li key={l.label}>
+                  <Link
+                    to={l.to}
                     className="text-sm text-gray-400 hover:text-imagine-red transition-colors"
                   >
-                    {l}
-                  </a>
+                    {l.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -84,9 +163,15 @@ const Footer = () => {
             © {new Date().getFullYear()} Imagine IPS. All rights reserved.
           </div>
           <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-imagine-red">Terms</a>
-            <a href="#" className="hover:text-imagine-red">Privacy</a>
-            <a href="#" className="hover:text-imagine-red">AUP</a>
+            <Link to="/contact" className="hover:text-imagine-red">
+              Terms
+            </Link>
+            <Link to="/contact" className="hover:text-imagine-red">
+              Privacy
+            </Link>
+            <Link to="/contact" className="hover:text-imagine-red">
+              AUP
+            </Link>
           </div>
         </div>
       </div>

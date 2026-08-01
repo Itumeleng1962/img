@@ -1,26 +1,110 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import {
+  Search,
+  MapPin,
+  Loader2,
+  CheckCircle2,
+  XCircle,
+  Wifi,
+  ArrowRight,
+} from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { useToast } from '../hooks/use-toast';
 
-const CoverageBar = () => {
+// Mocked coverage database
+const COVERAGE_DB = [
+  {
+    match: ['sandton', 'randburg', 'rosebank', 'sunninghill'],
+    area: 'Sandton · Gauteng',
+    networks: ['Vumatel', 'Openserve', 'Metro Fibre', 'Frogfoot'],
+    speeds: '20 Mbps – 1 Gbps',
+  },
+  {
+    match: ['cape town', 'stellenbosch', 'somerset', 'claremont'],
+    area: 'Cape Town Metro',
+    networks: ['Openserve', 'Frogfoot', 'Vumatel'],
+    speeds: '25 Mbps – 1 Gbps',
+  },
+  {
+    match: ['durban', 'umhlanga', 'westville', 'ballito'],
+    area: 'eThekwini · KZN',
+    networks: ['Openserve', 'Vumatel', 'Metro Fibre'],
+    speeds: '20 Mbps – 500 Mbps',
+  },
+  {
+    match: ['benoni', 'kempton', 'boksburg', 'edenvale', 'germiston'],
+    area: 'East Rand · Gauteng',
+    networks: ['Netstream', 'DNATel', 'Evotel', 'Openserve'],
+    speeds: '20 Mbps – 1 Gbps',
+  },
+  {
+    match: ['pretoria', 'centurion', 'midrand', 'menlyn'],
+    area: 'Tshwane · Gauteng',
+    networks: ['Openserve', 'Vumatel', 'Metro Fibre'],
+    speeds: '25 Mbps – 1 Gbps',
+  },
+];
+
+export const checkCoverage = (address) => {
+  const q = address.toLowerCase().trim();
+  if (!q) return null;
+  const hit = COVERAGE_DB.find((c) => c.match.some((k) => q.includes(k)));
+  if (hit) return { available: true, ...hit };
+  // Fallback: pretend some addresses have coming-soon coverage
+  if (q.length > 5) {
+    return {
+      available: false,
+      area: 'Your area',
+      networks: [],
+      speeds: null,
+      comingSoon: true,
+    };
+  }
+  return null;
+};
+
+const CoverageBar = ({ compact = false }) => {
   const [address, setAddress] = useState('');
-  const [state, setState] = useState('idle'); // idle | loading | success
+  const [state, setState] = useState('idle'); // idle | loading | done
+  const [result, setResult] = useState(null);
+  const { toast } = useToast();
 
   const check = (e) => {
     e.preventDefault();
-    if (!address.trim()) return;
+    if (!address.trim()) {
+      toast({
+        title: 'Enter an address',
+        description: 'Please enter your street, suburb or city.',
+      });
+      return;
+    }
     setState('loading');
-    setTimeout(() => setState('success'), 1200);
+    setResult(null);
+    setTimeout(() => {
+      const r = checkCoverage(address);
+      setResult(r);
+      setState('done');
+      // Persist to history
+      const hist = JSON.parse(
+        localStorage.getItem('imagine_coverage_history') || '[]'
+      );
+      hist.unshift({ address, result: r, ts: Date.now() });
+      localStorage.setItem(
+        'imagine_coverage_history',
+        JSON.stringify(hist.slice(0, 10))
+      );
+    }, 1200);
   };
 
   return (
-    <section id="coverage" className="relative pt-14 md:pt-20 pb-4 z-10">
+    <section id="coverage" className={`relative ${compact ? 'py-6' : 'pt-14 md:pt-20 pb-4'} z-10`}>
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
         <div className="bg-white rounded-3xl border border-gray-100 shadow-2xl shadow-red-500/10 p-6 md:p-8">
           <div className="grid md:grid-cols-[1.4fr_1fr] gap-6 items-center">
             <div>
-              <div className="flex items-center gap-2 text-imagine-red font-bold text-xs uppercase tracking-wider mb-2">
+              <div className="flex items-center gap-2 text-[#E4002B] font-bold text-xs uppercase tracking-wider mb-2">
                 <MapPin size={14} /> Coverage Check
               </div>
               <h3 className="font-display text-2xl md:text-3xl font-extrabold text-[#0f1720]">
@@ -39,40 +123,113 @@ const CoverageBar = () => {
                 <Input
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Enter your street address…"
-                  className="pl-11 h-14 rounded-full border-gray-200 focus-visible:ring-2 focus-visible:ring-imagine-red/40"
+                  placeholder="e.g. Sandton, Benoni, Cape Town…"
+                  className="pl-11 h-14 rounded-full border-gray-200 focus-visible:ring-2 focus-visible:ring-[#E4002B]/40"
                 />
               </div>
               <Button
                 type="submit"
-                className="h-14 rounded-full px-7 bg-imagine-red hover:bg-[#c40025] text-white font-semibold"
+                className="h-14 rounded-full px-7 bg-[#E4002B] hover:bg-[#c40025] text-white font-semibold"
               >
                 {state === 'loading' ? (
                   <Loader2 className="animate-spin" />
-                ) : state === 'success' ? (
-                  <>
-                    <CheckCircle2 size={18} className="mr-1" /> Available!
-                  </>
                 ) : (
                   'Check Now'
                 )}
               </Button>
             </form>
           </div>
-          {state === 'success' && (
-            <div className="mt-5 rounded-2xl bg-green-50 border border-green-200 p-4 flex items-start gap-3">
-              <CheckCircle2 className="text-green-600 mt-0.5" size={20} />
-              <div>
-                <div className="font-semibold text-green-800">
-                  Great news — Imagine Fibre is available at your address!
-                </div>
-                <div className="text-sm text-green-700">
-                  Networks live: Vumatel, Openserve, Metro Fibre. Speeds from 20
-                  Mbps up to 1 Gbps.
+
+          {state === 'done' && result?.available && (
+            <div className="mt-5 rounded-2xl bg-green-50 border border-green-200 p-5">
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="text-green-600 mt-0.5 shrink-0" size={22} />
+                <div className="flex-1">
+                  <div className="font-display font-extrabold text-green-800 text-lg">
+                    Great news — Imagine Fibre is available!
+                  </div>
+                  <div className="text-sm text-green-700">
+                    Area detected: <strong>{result.area}</strong>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {result.networks.map((n) => (
+                      <span
+                        key={n}
+                        className="px-3 py-1 rounded-full bg-white border border-green-300 text-green-800 text-xs font-semibold flex items-center gap-1.5"
+                      >
+                        <Wifi size={11} /> {n}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-3 text-sm text-green-700">
+                    Speeds available: <strong>{result.speeds}</strong>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <Button
+                      asChild
+                      className="rounded-full bg-[#E4002B] hover:bg-[#c40025] text-white h-11 px-5"
+                    >
+                      <Link to="/connect/home">
+                        View packages <ArrowRight size={15} className="ml-1" />
+                      </Link>
+                    </Button>
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="rounded-full h-11 px-5 border-green-300 text-green-800 hover:bg-green-100"
+                    >
+                      <Link to="/contact">Talk to sales</Link>
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
           )}
+
+          {state === 'done' && result && !result.available && (
+            <div className="mt-5 rounded-2xl bg-amber-50 border border-amber-200 p-5">
+              <div className="flex items-start gap-3">
+                <XCircle className="text-amber-600 mt-0.5 shrink-0" size={22} />
+                <div>
+                  <div className="font-display font-extrabold text-amber-900 text-lg">
+                    Not live in your area yet.
+                  </div>
+                  <div className="text-sm text-amber-800">
+                    Imagine is rolling out to new areas every week. Join our
+                    waiting list to be first-in-line when we go live.
+                  </div>
+                  <Button
+                    asChild
+                    className="mt-4 rounded-full bg-amber-600 hover:bg-amber-700 text-white h-11 px-5"
+                  >
+                    <Link to="/contact">Join the waiting list</Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {state === 'done' && !result && (
+            <div className="mt-5 rounded-2xl bg-gray-50 border border-gray-200 p-4 text-sm text-gray-600">
+              We couldn’t interpret that address. Try a suburb or city like
+              “Sandton” or “Cape Town”.
+            </div>
+          )}
+
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+            Try:
+            {['Sandton', 'Benoni', 'Cape Town', 'Umhlanga', 'Pretoria'].map(
+              (s) => (
+                <button
+                  key={s}
+                  onClick={() => setAddress(s)}
+                  className="px-2.5 py-1 rounded-full bg-gray-100 hover:bg-[#E4002B] hover:text-white transition-colors font-medium"
+                >
+                  {s}
+                </button>
+              )
+            )}
+          </div>
         </div>
       </div>
     </section>

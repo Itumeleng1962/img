@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { newsItems } from '../mock';
 import { ArrowUpRight, CalendarDays } from 'lucide-react';
 
@@ -15,19 +16,20 @@ const News = () => {
               News & <span className="text-imagine-red">campaigns.</span>
             </h2>
           </div>
-          <a
-            href="#all-news"
+          <Link
+            to="/news"
             className="inline-flex items-center gap-2 text-imagine-red font-semibold hover:gap-3 transition-all"
           >
             See all news <ArrowUpRight size={16} />
-          </a>
+          </Link>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {newsItems.map((n) => (
-            <article
+            <Link
               key={n.id}
-              className="group rounded-3xl overflow-hidden bg-white border border-gray-100 card-glow"
+              to="/news"
+              className="group rounded-3xl overflow-hidden bg-white border border-gray-100 card-glow block"
             >
               <div className="aspect-[16/10] overflow-hidden">
                 <img
@@ -53,7 +55,7 @@ const News = () => {
                   Read more <ArrowUpRight size={14} />
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>

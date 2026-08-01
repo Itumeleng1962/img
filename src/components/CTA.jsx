@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import { ArrowRight, Zap } from 'lucide-react';
 
@@ -35,9 +36,9 @@ const CTA = () => {
                   className="rounded-full px-7 py-6 bg-white text-imagine-red hover:bg-[#0f1720] hover:text-white font-semibold"
                   asChild
                 >
-                  <a href="#coverage">
+                  <Link to="/coverage">
                     Check my coverage <ArrowRight size={18} className="ml-1" />
-                  </a>
+                  </Link>
                 </Button>
                 <Button
                   size="lg"
@@ -45,7 +46,7 @@ const CTA = () => {
                   className="rounded-full px-7 py-6 border-2 border-white text-white bg-transparent hover:bg-white hover:text-imagine-red font-semibold"
                   asChild
                 >
-                  <a href="#contact">Talk to sales</a>
+                  <Link to="/contact">Talk to sales</Link>
                 </Button>
               </div>
             </div>

@@ -1,28 +1,28 @@
 // Mock data for Imagine IPS website
 
 export const navLinks = [
-  { label: 'Home', href: '#home' },
+  { label: 'Home', to: '/' },
   {
     label: 'Connect',
-    href: '#connect',
+    to: '/connect',
     submenu: [
-      { label: 'Home Fibre', href: '#home-fibre' },
-      { label: 'Business', href: '#business' },
-      { label: 'Estate & Complexes', href: '#estate' },
+      { label: 'Home Fibre', to: '/connect/home' },
+      { label: 'Business', to: '/connect/business' },
+      { label: 'Estate & Complexes', to: '/connect/estate' },
     ],
   },
   {
     label: 'Services',
-    href: '#services',
+    to: '/services',
     submenu: [
-      { label: 'Ultra-Fast Fibre', href: '#fibre' },
-      { label: 'VoIP Voice', href: '#voice' },
-      { label: 'IT Support', href: '#support' },
+      { label: 'Ultra-Fast Fibre', to: '/services/fibre' },
+      { label: 'VoIP Voice', to: '/services/voice' },
+      { label: 'IT Support', to: '/services/support' },
     ],
   },
-  { label: 'Coverage', href: '#coverage' },
-  { label: 'News', href: '#news' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Coverage', to: '/coverage' },
+  { label: 'News', to: '/news' },
+  { label: 'Contact', to: '/contact' },
 ];
 
 export const heroSlides = [

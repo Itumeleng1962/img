@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { faqs } from '../mock';
 import {
   Accordion,
@@ -23,12 +24,12 @@ const FAQ = () => {
             Can’t find what you need? Our real, human team is a phone call
             away.
           </p>
-          <a
-            href="#contact"
+          <Link
+            to="/contact"
             className="mt-6 inline-flex items-center gap-2 px-5 py-3 rounded-full bg-imagine-red hover:bg-[#c40025] text-white font-semibold transition-colors"
           >
             <HelpCircle size={16} /> Talk to a human
-          </a>
+          </Link>
         </div>
 
         <div className="lg:col-span-7">
