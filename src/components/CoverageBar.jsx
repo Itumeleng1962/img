@@ -15,7 +15,7 @@ const CoverageBar = () => {
   };
 
   return (
-    <section id="coverage" className="relative -mt-10 z-20">
+    <section id="coverage" className="relative pt-14 md:pt-20 pb-4 z-10">
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
         <div className="bg-white rounded-3xl border border-gray-100 shadow-2xl shadow-red-500/10 p-6 md:p-8">
           <div className="grid md:grid-cols-[1.4fr_1fr] gap-6 items-center">

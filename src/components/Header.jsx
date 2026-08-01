@@ -42,7 +42,7 @@ const Header = () => {
 
       <div className="px-6 lg:px-10 py-3 flex items-center justify-between">
         <a href="#home" className="shrink-0">
-          <Logo />
+          <Logo height={48} />
         </a>
 
         <nav className="hidden lg:flex items-center gap-1">

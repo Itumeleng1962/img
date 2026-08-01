@@ -36,7 +36,9 @@ const Footer = () => {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-10 py-14 grid md:grid-cols-2 lg:grid-cols-6 gap-10">
         <div className="lg:col-span-2">
-          <Logo variant="light" />
+          <div className="bg-white/95 rounded-xl inline-block px-3 py-2">
+            <Logo height={40} />
+          </div>
           <p className="mt-4 text-sm text-gray-400 max-w-xs leading-relaxed">
             Imagine IPS is a premium South African Internet Service Provider,
             connecting people for smarter living since 2005.
