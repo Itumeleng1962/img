@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #ffffff;
+  color: #0f1720;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.font-display {
+  font-family: 'Poppins', 'Inter', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+@layer base {
+  :root {
+    /* Imagine brand palette */
+    --imagine-red: 351 100% 45%;
+    --imagine-red-600: 351 95% 40%;
+    --imagine-red-50: 351 100% 96%;
+    --imagine-cyan: 194 100% 43%;
+    --imagine-cyan-600: 194 100% 36%;
+    --imagine-ink: 220 20% 10%;
+    --imagine-cloud: 210 20% 98%;
+
+    --background: 0 0% 100%;
+    --foreground: 220 20% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
+    --primary: 351 100% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 194 100% 43%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 220 10% 40%;
+    --accent: 351 100% 96%;
+    --accent-foreground: 351 100% 30%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 15% 90%;
+    --input: 220 15% 90%;
+    --ring: 351 100% 45%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom utility classes */
+.text-imagine-red {
+  color: hsl(var(--imagine-red));
+}
+.bg-imagine-red {
+  background-color: hsl(var(--imagine-red));
+}
+.bg-imagine-cyan {
+  background-color: hsl(var(--imagine-cyan));
+}
+.text-imagine-cyan {
+  color: hsl(var(--imagine-cyan));
+}
+.border-imagine-red {
+  border-color: hsl(var(--imagine-red));
+}
+
+/* Subtle grain overlay for hero */
+.grain-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+}
+
+/* Animated blob */
+@keyframes blob {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -40px) scale(1.08);
+  }
+  66% {
+    transform: translate(-25px, 20px) scale(0.95);
+  }
+}
+.animate-blob {
+  animation: blob 18s ease-in-out infinite;
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+.animate-float {
+  animation: floatY 6s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.reveal {
+  opacity: 0;
+}
+.reveal.is-visible {
+  animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Custom radial background */
+.radial-red {
+  background: radial-gradient(
+      1200px 600px at 10% 0%,
+      hsla(351, 100%, 45%, 0.14),
+      transparent 60%
+    ),
+    radial-gradient(
+      1000px 500px at 100% 30%,
+      hsla(194, 100%, 43%, 0.12),
+      transparent 55%
+    );
+}
+
+/* Focus rings should never be clipped */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px hsla(351, 100%, 45%, 0.25);
+  border-radius: 0.6rem;
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Card hover glow */
+.card-glow {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.card-glow:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px -20px hsla(351, 90%, 45%, 0.25);
+}
