@@ -87,7 +87,7 @@ const Header = () => {
             rel="noopener noreferrer"
             className="hover:text-[#E4002B] transition-colors"
           >
-            Client Portal (AtAGlance)
+            Client Portal
           </a>
         </div>
       </div>

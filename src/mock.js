@@ -461,7 +461,7 @@ export const footerLinks = {
   Company: [
     { label: 'About Imagine IPS', to: '/contact' },
     { label: 'News & Updates', to: '/news' },
-    { label: 'Client Portal (AtAGlance)', to: 'https://ataglance.imagine.co.za/' },
+    { label: 'Client Portal', to: 'https://ataglance.imagine.co.za/' },
     { label: 'Webmail Login', to: 'https://webmail.imagine.co.za/' },
   ],
   Services: [
