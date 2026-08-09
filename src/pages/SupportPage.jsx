@@ -1,5 +1,6 @@
 import React from 'react';
-import SubPageTemplate from '../components/SubPageTemplate';
+import { Link } from 'react-router-dom';
+import Layout from '../components/Layout';
 import {
   Wrench,
   Headset,
@@ -7,36 +8,94 @@ import {
   Cloud,
   Laptop,
   Server,
+  Activity,
+  Megaphone,
+  BookOpen,
+  PlusCircle,
+  ArrowRight
 } from 'lucide-react';
+import { contactDetails } from '../mock';
 
-const SupportPage = () => (
-  <SubPageTemplate
-    eyebrow="IT Support"
-    title="Proactive support that"
-    highlight="predicts problems."
-    description="On-site and remote IT support for homes and businesses. Real humans, real fixes — before your team even notices there’s a problem."
-    image="https://images.unsplash.com/photo-1606857521015-7f9fcf423740?w=1600&q=80"
-    breadcrumb={[
-      { label: 'Services', to: '/services' },
-      { label: 'IT Support' },
-    ]}
-    intro={{
-      heading: 'Your IT team, on tap.',
-      body:
-        'Imagine IT Support blends monitoring, patching and human help-desk into a single, predictable monthly cost — so your team can focus on growing the business.',
-    }}
-    features={[
-      { icon: Headset, title: '24/7 help-desk', body: 'Talk to a real technician in under 2 minutes, any time of day or night.' },
-      { icon: Wrench, title: 'On-site technicians', body: 'National footprint of engineers dispatched to you — usually within hours.' },
-      { icon: ShieldCheck, title: 'Managed security', body: 'Antivirus, EDR and patch management on every managed device.' },
-      { icon: Cloud, title: 'Microsoft 365 & Google', body: 'Full email, files, licensing and identity management for your workspace.' },
-      { icon: Laptop, title: 'Device lifecycle', body: 'From procurement to imaging, deployment and secure retirement.' },
-      { icon: Server, title: 'Server & network care', body: 'Firewalls, switches, servers and cloud infrastructure — all handled.' },
-    ]}
-    ctaTitle="Free IT audit for new customers."
-    ctaBody="Book a no-obligation 60-minute audit — walk away with a report you can action."
-    ctaButton={{ label: 'Book my audit', to: '/contact' }}
-  />
-);
+export default function SupportPage() {
+  return (
+    <Layout>
+      {/* Hero */}
+      <section className="relative overflow-hidden pt-28 pb-20 px-6 lg:px-10 text-white"
+        style={{ background: 'linear-gradient(135deg, #0d1f3c 0%, #1a3a6b 60%, #0d1f3c 100%)' }}>
+        <div className="max-w-4xl mx-auto text-center space-y-6">
+          <span className="inline-block text-xs font-bold px-3 py-1.5 rounded-full border border-orange-500/30 text-orange-300" style={{ background: 'rgba(244,126,32,0.15)' }}>
+            Customer Support & IT Services
+          </span>
+          <h1 className="text-4xl md:text-5xl font-black">How can we help you today?</h1>
+          <p className="text-blue-200 text-sm md:text-base max-w-xl mx-auto">
+            Access network status reports, search the hosting knowledge base, open a technical support ticket, or view managed IT care packages.
+          </p>
+        </div>
+      </section>
 
-export default SupportPage;
+      {/* Support Portal Cards */}
+      <section className="py-12 px-6 lg:px-10 bg-gray-50">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-4 gap-6">
+          {[
+            { icon: Activity, title: 'Network Status', desc: 'Real-time uptime checks on our fibre and hosting networks.', action: 'View Status', link: '#' },
+            { icon: Megaphone, title: 'Announcements', desc: 'Latest updates on network rollouts and company news.', action: 'Read News', link: '/news' },
+            { icon: BookOpen, title: 'Knowledge Base', desc: 'Frequently asked hosting questions and setup guides.', action: 'Search KB', link: '/services/hosting' },
+            { icon: PlusCircle, title: 'Open Support Ticket', desc: 'Submit a technical support ticket to our 24/7 helpdesk.', action: 'Create Ticket', link: '/contact' }
+          ].map((portal) => {
+            const Icon = portal.icon;
+            return (
+              <div key={portal.title} className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
+                <div className="space-y-3">
+                  <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-orange-500">
+                    <Icon size={20} />
+                  </div>
+                  <h3 className="font-extrabold text-sm text-[#0d1f3c]">{portal.title}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{portal.desc}</p>
+                </div>
+                <Link to={portal.link} className="mt-5 text-xs font-bold text-orange-500 hover:text-orange-600 flex items-center gap-1">
+                  {portal.action} <ArrowRight size={12} />
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* IT Managed Care Services */}
+      <section className="py-16 px-6 lg:px-10 bg-white">
+        <div className="max-w-5xl mx-auto space-y-12">
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl lg:text-3xl font-extrabold text-[#0d1f3c]">Managed IT Support & Care</h2>
+            <p className="text-xs text-gray-500 max-w-lg mx-auto">
+              Imagine IT Support blends remote helpdesk patching and on-site engineers into a single, predictable monthly cost.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { icon: Headset, title: '24/7 technical help-desk', desc: 'Talk to a qualified network technician via phone or email in under 2 minutes.' },
+              { icon: Wrench, title: 'On-site engineers', desc: 'Dispatched national footprint of engineers for rapid system recovery.' },
+              { icon: ShieldCheck, title: 'Managed security & patches', desc: 'Auto security updates, malware sweeps, and protection scans on every device.' },
+              { icon: Cloud, title: 'Cloud Infrastructure care', desc: 'Host configuration, Plesk control panel management, database pools care.' },
+              { icon: Laptop, title: 'Anywhere mobile dashboard', desc: 'View server health, adjust email settings, and order items from mobile.' },
+              { icon: Server, title: 'Server & Network Care', desc: 'Corporate routers configurations, VLAN setups, and server security backups.' }
+            ].map((care) => {
+              const Icon = care.icon;
+              return (
+                <div key={care.title} className="flex gap-4 items-start">
+                  <div className="w-10 h-10 shrink-0 rounded-xl bg-orange-100 flex items-center justify-center text-orange-500">
+                    <Icon size={18} />
+                  </div>
+                  <div>
+                    <h3 className="font-extrabold text-sm text-[#0d1f3c] mb-1">{care.title}</h3>
+                    <p className="text-xs text-gray-500 leading-relaxed">{care.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    </Layout>
+  );
+}

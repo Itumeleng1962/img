@@ -17,6 +17,7 @@ import SecurityPage from './pages/SecurityPage';
 import TransferPage from './pages/TransferPage';
 import SslPage from './pages/SslPage';
 import ResellersPage from './pages/ResellersPage';
+import WebDevPage from './pages/WebDevPage';
 import SupportPage from './pages/SupportPage';
 import CoveragePage from './pages/CoveragePage';
 import NewsPage from './pages/NewsPage';
@@ -45,6 +46,7 @@ function App() {
         <Route path="/services/transfer" element={<TransferPage />} />
         <Route path="/services/ssl" element={<SslPage />} />
         <Route path="/services/resellers" element={<ResellersPage />} />
+        <Route path="/services/webdev" element={<WebDevPage />} />
         <Route path="/services/support" element={<SupportPage />} />
         <Route path="/coverage" element={<CoveragePage />} />
         <Route path="/news" element={<NewsPage />} />
@@ -56,6 +58,7 @@ function App() {
 }
 
 export default App;
+
 
 
 

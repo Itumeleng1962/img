@@ -48,6 +48,31 @@ const Header = () => {
           </a>
         </div>
         <div className="flex items-center gap-4">
+          <Link
+            to="/services/transfer"
+            className="hover:text-[#E4002B] transition-colors flex items-center gap-1"
+          >
+            Transfer to Us{' '}
+            <span className="text-[8px] bg-[#1877f2] text-white px-1 py-0.5 rounded font-bold leading-none">
+              TRY ME
+            </span>
+          </Link>
+          <Link
+            to="/services/ssl"
+            className="hover:text-[#E4002B] transition-colors"
+          >
+            SSL Certificates
+          </Link>
+          <Link
+            to="/services/resellers"
+            className="hover:text-[#E4002B] transition-colors flex items-center gap-1"
+          >
+            Resellers{' '}
+            <span className="text-[8px] bg-orange-500 text-white px-1 py-0.5 rounded font-bold leading-none">
+              NEW
+            </span>
+          </Link>
+          <span className="opacity-60">|</span>
           <a
             href="https://webmail.imagine.co.za/"
             target="_blank"
@@ -169,6 +194,36 @@ const Header = () => {
       {open && (
         <div className="lg:hidden border-t border-gray-100 bg-white">
           <div className="px-6 py-4 flex flex-col gap-1 max-h-[70vh] overflow-y-auto">
+            {/* Quick links from top strip for mobile */}
+            <div className="pb-3 mb-1 border-b border-gray-100 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs">
+              <Link
+                to="/services/transfer"
+                className="font-bold text-gray-800 hover:text-[#E4002B] flex items-center gap-1"
+              >
+                Transfer to Us{' '}
+                <span className="text-[8px] bg-[#1877f2] text-white px-1 py-0.5 rounded font-bold leading-none">
+                  TRY ME
+                </span>
+              </Link>
+              <span className="text-gray-300">•</span>
+              <Link
+                to="/services/ssl"
+                className="font-bold text-gray-800 hover:text-[#E4002B]"
+              >
+                SSL Certificates
+              </Link>
+              <span className="text-gray-300">•</span>
+              <Link
+                to="/services/resellers"
+                className="font-bold text-gray-800 hover:text-[#E4002B] flex items-center gap-1"
+              >
+                Resellers{' '}
+                <span className="text-[8px] bg-orange-500 text-white px-1 py-0.5 rounded font-bold leading-none">
+                  NEW
+                </span>
+              </Link>
+            </div>
+
             {navLinks.map((l) => (
               <div key={l.label} className="py-2 border-b border-gray-100">
                 <div className="flex items-center gap-2">

@@ -9,12 +9,19 @@ import { useToast } from '../hooks/use-toast';
 /* ─── Product Catalog Footer Groups ──────────────────────────────────────── */
 const catalogGroups = [
   {
+    title: 'Web Dev',
+    links: [
+      { label: 'Website Development', to: '/services/webdev' },
+    ],
+  },
+  {
     title: 'Domains',
     badge: 'NEW',
     links: [
-      { label: 'Domain Name Search', to: '/services/domains' },
+      { label: 'Domain Registration', to: '/services/domains' },
       { label: 'Domain Transfer', to: '/services/transfer' },
-      { label: 'Personal Domain', to: '/services/domains' },
+      { label: 'Domain Prices', to: '/services/domains' },
+      { label: 'WHOIS Lookup', to: '/services/domains' },
     ],
   },
   {
@@ -22,25 +29,21 @@ const catalogGroups = [
     links: [
       { label: 'Shared Hosting', to: '/services/hosting' },
       { label: 'Hosting for WordPress', to: '/services/wordpress' },
-      { label: 'Reseller Hosting', to: '/services/resellers' },
       { label: 'VPS Hosting', to: '/services/hosting' },
+      { label: 'Enterprise Hosting', to: '/services/resellers' },
+      { label: 'LiteSpeed Hosting', to: '/services/resellers' },
       { label: 'Dedicated Servers', to: '/services/hosting' },
-      { label: 'Private Email Hosting', to: '/services/email' },
+      { label: 'Virtual Machines', to: '/services/hosting' },
       { label: 'Migrate to Imagine', to: '/services/transfer' },
-    ],
-  },
-  {
-    title: 'WordPress',
-    links: [
-      { label: 'WP Hosting Tiers', to: '/services/wordpress' },
-      { label: 'Plesk WP Toolkit', to: '/services/wordpress' },
-      { label: 'WordPress Migration', to: '/services/transfer' },
     ],
   },
   {
     title: 'Email',
     links: [
       { label: 'Business Email', to: '/services/email' },
+      { label: 'Managed Email Hosting', to: '/services/email' },
+      { label: 'Personal Email Hosting', to: '/services/email' },
+      { label: 'Bulk SMTP Services', to: '/services/email' },
       { label: 'Anti Spam Protection', to: '/services/security' },
       { label: 'Login to Webmail', to: 'https://webmail.imagine.co.za/' },
     ],
@@ -54,6 +57,7 @@ const catalogGroups = [
       { label: 'Fix Hacked Website', to: '/services/security' },
       { label: 'Cyber Insurance Advice', to: '/services/security' },
       { label: '2FA Authentication', to: '/services/security' },
+      { label: 'Anti-Spam Protection', to: '/services/security' },
     ],
   },
   {
@@ -67,7 +71,11 @@ const catalogGroups = [
   {
     title: 'SSL Certificates',
     links: [
-      { label: 'Organization Validation', to: '/services/ssl' },
+      { label: 'SSL South Africa', to: '/services/ssl' },
+      { label: 'Comodo SSL', to: '/services/ssl' },
+      { label: 'RapidSSL', to: '/services/ssl' },
+      { label: 'GeoTrust SSL', to: '/services/ssl' },
+      { label: 'Thawte SSL', to: '/services/ssl' },
       { label: 'Domain Validation', to: '/services/ssl' },
       { label: 'Extended Validation', to: '/services/ssl' },
       { label: 'Single Domain', to: '/services/ssl' },
@@ -79,10 +87,21 @@ const catalogGroups = [
     title: 'Resellers',
     badge: 'NEW',
     links: [
-      { label: 'SSL Certificates', to: '/services/ssl' },
-      { label: 'Reseller Hosting', to: '/services/resellers' },
-      { label: 'Enterprise Hosting', to: '/services/resellers' },
-      { label: 'LiteSpeed Hosting', to: '/services/resellers' },
+      { label: 'Domain Resellers', to: '/services/resellers' },
+      { label: 'African Domains', to: '/services/resellers' },
+      { label: 'LiteSpeed Reseller', to: '/services/resellers' },
+      { label: 'Web Hosting Reseller', to: '/services/resellers' },
+      { label: 'Affiliates', to: '/services/resellers' },
+      { label: 'IT Partner Programme', to: '/services/resellers' },
+    ],
+  },
+  {
+    title: 'Support',
+    links: [
+      { label: 'Network Status', to: '/services/support' },
+      { label: 'Announcements', to: '/news' },
+      { label: 'Knowledge Base', to: '/services/support' },
+      { label: 'Open Support Ticket', to: '/contact' },
     ],
   },
 ];

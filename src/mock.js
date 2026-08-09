@@ -2,13 +2,18 @@
 
 export const navLinks = [
   {
+    label: 'Web Dev',
+    to: '/services/webdev',
+  },
+  {
     label: 'Domains',
     to: '/services/domains',
     badge: 'NEW',
     submenu: [
-      { label: 'Domain Name Search', to: '/services/domains' },
+      { label: 'Domain Registration', to: '/services/domains' },
       { label: 'Domain Transfer', to: '/services/transfer' },
-      { label: 'Personal Domain', to: '/services/domains' },
+      { label: 'Domain Prices', to: '/services/domains' },
+      { label: 'WHOIS Lookup', to: '/services/domains' },
     ],
   },
   {
@@ -17,22 +22,22 @@ export const navLinks = [
     submenu: [
       { label: 'Shared Hosting', to: '/services/hosting' },
       { label: 'Hosting for WordPress', to: '/services/wordpress' },
-      { label: 'Reseller Hosting', to: '/services/resellers' },
       { label: 'VPS Hosting', to: '/services/hosting' },
+      { label: 'Enterprise Hosting', to: '/services/resellers' },
+      { label: 'LiteSpeed Hosting', to: '/services/resellers' },
       { label: 'Dedicated Servers', to: '/services/hosting' },
-      { label: 'Private Email Hosting', to: '/services/email' },
+      { label: 'Virtual Machines', to: '/services/hosting' },
       { label: 'Migrate to Imagine', to: '/services/transfer' },
     ],
-  },
-  {
-    label: 'WordPress',
-    to: '/services/wordpress',
   },
   {
     label: 'Email',
     to: '/services/email',
     submenu: [
       { label: 'Business Email', to: '/services/email' },
+      { label: 'Managed Email Hosting', to: '/services/email' },
+      { label: 'Personal Email Hosting', to: '/services/email' },
+      { label: 'Bulk SMTP Services', to: '/services/email' },
       { label: 'Anti Spam Protection', to: '/services/security' },
       { label: 'Login to Webmail', to: 'https://webmail.imagine.co.za/' },
     ],
@@ -49,36 +54,15 @@ export const navLinks = [
       { label: '2FA Authentication', to: '/services/security' },
     ],
   },
+
   {
-    label: 'Transfer to Us',
-    to: '/services/transfer',
-    badge: 'TRY ME',
+    label: 'Support',
+    to: '/services/support',
     submenu: [
-      { label: 'Domain Transfer', to: '/services/transfer' },
-      { label: 'Migrate Hosting', to: '/services/transfer' },
-    ],
-  },
-  {
-    label: 'SSL Certificates',
-    to: '/services/ssl',
-    submenu: [
-      { label: 'Organization Validation', to: '/services/ssl' },
-      { label: 'Domain Validation', to: '/services/ssl' },
-      { label: 'Extended Validation', to: '/services/ssl' },
-      { label: 'Single Domain', to: '/services/ssl' },
-      { label: 'Wildcard', to: '/services/ssl' },
-      { label: 'Multi-Domain', to: '/services/ssl' },
-    ],
-  },
-  {
-    label: 'Resellers',
-    to: '/services/resellers',
-    badge: 'NEW',
-    submenu: [
-      { label: 'SSL Certificates', to: '/services/ssl' },
-      { label: 'Reseller Hosting', to: '/services/resellers' },
-      { label: 'Enterprise Hosting', to: '/services/resellers' },
-      { label: 'LiteSpeed Hosting', to: '/services/resellers' },
+      { label: 'Network Status', to: '/services/support' },
+      { label: 'Announcements', to: '/news' },
+      { label: 'Knowledge Base', to: '/services/support' },
+      { label: 'Open Support Ticket', to: '/contact' },
     ],
   },
 ];

@@ -20,20 +20,31 @@ import {
   Users,
   ShieldAlert,
   Award,
-  BookOpen
+  BookOpen,
+  Laptop
 } from 'lucide-react';
 
 /* ─── Product catalog categories ─────────────────────────────────────────── */
 const PRODUCT_CATALOG = [
+  {
+    id: 'webdev',
+    title: 'Website Development',
+    icon: Laptop,
+    desc: 'Stunning corporate CMS websites and custom web application design solutions.',
+    items: [
+      { name: 'Website Development', desc: 'Pre-optimized landing pages, e-commerce stores, and corporate sites.', link: '/services/webdev' }
+    ]
+  },
   {
     id: 'domains',
     title: 'Domains',
     icon: Globe,
     desc: 'Register, transfer & secure your unique online identity.',
     items: [
-      { name: 'Domain Name Search', desc: 'Find and register the perfect .co.za, .com, or net domain.', link: '/services/hosting/order' },
-      { name: 'Domain Transfer', desc: 'Easily move your domain to Imagine IPS for consolidated billing.', link: '/services/hosting/order?tab=transfer' },
-      { name: 'Personal Domain', desc: 'Secure custom domains for personal blogging, portfolios, and cvs.', link: '/services/hosting/order' }
+      { name: 'Domain Registration', desc: 'Secure your .co.za, .com, or .net domain name in seconds.', link: '/services/domains' },
+      { name: 'Domain Transfer', desc: 'Consolidate registration and management under one local provider.', link: '/services/transfer' },
+      { name: 'Domain Prices', desc: 'Transparent local pricing matrix for registration and renewals.', link: '/services/domains' },
+      { name: 'WHOIS Lookup', desc: 'Lookup domain registration details and ownership statuses.', link: '/services/domains' }
     ]
   },
   {
@@ -43,12 +54,13 @@ const PRODUCT_CATALOG = [
     desc: 'SSD Powered cloud hosting solutions from shared setups to dedicated metal.',
     items: [
       { name: 'Shared Hosting', desc: 'SSD-backed web hosting with Plesk Control Panel.', link: '/services/hosting' },
-      { name: 'Hosting for WordPress', desc: 'Optimized WordPress environments with 1-click installer and auto-updates.', link: '/services/hosting' },
-      { name: 'Reseller Hosting', desc: 'White-labeled hosting packages to start your own hosting company.', link: '/contact' },
-      { name: 'VPS Hosting', desc: 'Virtual Private Servers with full root access & guaranteed CPU/RAM allocations.', link: '/contact' },
-      { name: 'Dedicated Servers', desc: 'Single-tenant bare metal servers for heavy enterprise workloads.', link: '/contact' },
-      { name: 'Private Email Hosting', desc: 'Dedicated mail server packages for corporate domain mail.', link: '/services/hosting/order' },
-      { name: 'Migrate to Imagine', desc: 'Free migration service for websites, emails, and database assets.', link: '/contact' }
+      { name: 'Hosting for WordPress', desc: 'Optimized WordPress environments with 1-click installer and auto-updates.', link: '/services/wordpress' },
+      { name: 'VPS Hosting', desc: 'Virtual Private Servers with full root access & guaranteed allocations.', link: '/services/hosting' },
+      { name: 'Enterprise Hosting', desc: 'High-resource limits, dedicated database pools, and SLAs.', link: '/services/resellers' },
+      { name: 'LiteSpeed Hosting', desc: 'Turbo-charge server loading speeds with LiteSpeed web servers.', link: '/services/resellers' },
+      { name: 'Dedicated Servers', desc: 'Single-tenant bare metal servers for heavy enterprise workloads.', link: '/services/hosting' },
+      { name: 'Virtual Machines', desc: 'Scalable virtualization nodes for devops and custom application hosting.', link: '/services/hosting' },
+      { name: 'Migrate to Imagine', desc: 'Free migration service for websites, emails, and database assets.', link: '/services/transfer' }
     ]
   },
   {
@@ -57,8 +69,11 @@ const PRODUCT_CATALOG = [
     icon: Mail,
     desc: 'Professional corporate email solutions keeping your team in touch.',
     items: [
-      { name: 'Business Email', desc: 'Custom @yourcompany mailboxes with robust IMAP/POP3 access.', link: '/services/hosting/order' },
-      { name: 'Anti Spam Protection', desc: 'Enterprise-grade spam filters shielding your inbox from phishing.', link: '/services/hosting/order' },
+      { name: 'Business Email', desc: 'Custom @yourcompany mailboxes with robust IMAP/POP3 access.', link: '/services/email' },
+      { name: 'Managed Email Hosting', desc: 'Fully outsourced workspace mailbox migration and updates.', link: '/services/email' },
+      { name: 'Personal Email Hosting', desc: 'Low-cost lightweight custom domain email accounts.', link: '/services/email' },
+      { name: 'Bulk SMTP Services', to: 'Dedicated transaction email relays for web apps and notifications.', link: '/services/email' },
+      { name: 'Anti Spam Protection', desc: 'Enterprise-grade spam filters shielding your inbox from phishing.', link: '/services/security' },
       { name: 'Login to Webmail', desc: 'Access your mailbox from any web browser securely.', link: 'https://webmail.imagine.co.za/' }
     ]
   },
@@ -68,12 +83,12 @@ const PRODUCT_CATALOG = [
     icon: Shield,
     desc: 'Secure your corporate web assets, protect consumer privacy, and recover from threats.',
     items: [
-      { name: 'Domain Privacy', desc: 'Mask your WHOIS ownership data to prevent unsolicited marketing.', link: '/contact' },
-      { name: 'Website Security', desc: 'Real-time firewall, malware scanning, and proactive patching.', link: '/contact' },
-      { name: 'Fix Hacked Website', desc: 'Immediate incident response, virus extraction, and cleanup.', link: '/contact' },
-      { name: 'Cyber Insurance advice', desc: 'Imagine assists you in advising & getting covered for cyber incidents.', link: '/contact' },
-      { name: '2FA Authentication', desc: 'Multi-factor authentication setups for Plesk and client portals.', link: '/contact' },
-      { name: 'Anti-Spam Protection', desc: 'Advanced email quarantine gates for incoming & outgoing mails.', link: '/contact' }
+      { name: 'Domain Privacy', desc: 'Mask your WHOIS ownership data to prevent unsolicited marketing.', link: '/services/security' },
+      { name: 'Website Security', desc: 'Real-time firewall, malware scanning, and proactive patching.', link: '/services/security' },
+      { name: 'Fix Hacked Website', desc: 'Immediate incident response, virus extraction, and cleanup.', link: '/services/security' },
+      { name: 'Cyber Insurance Advice', desc: 'Imagine assists you in advising & getting covered for cyber incidents.', link: '/services/security' },
+      { name: '2FA Authentication', desc: 'Multi-factor authentication setups for Plesk and client portals.', link: '/services/security' },
+      { name: 'Anti-Spam Protection', desc: 'Advanced email quarantine gates for incoming & outgoing mails.', link: '/services/security' }
     ]
   },
   {
@@ -82,8 +97,8 @@ const PRODUCT_CATALOG = [
     icon: RotateCw,
     desc: 'Consolidate your digital profile. Let our experts handle the heavy lifting.',
     items: [
-      { name: 'Domain Transfer', desc: 'Move your .co.za or international domains with zero downtime.', link: '/services/hosting/order?tab=transfer' },
-      { name: 'Migrate Hosting', desc: 'Free migration of databases, CMS files, and all mailboxes.', link: '/contact' }
+      { name: 'Domain Transfer', desc: 'Move your .co.za or international domains with zero downtime.', link: '/services/transfer' },
+      { name: 'Migrate Hosting', desc: 'Free migration of databases, CMS files, and all mailboxes.', link: '/services/transfer' }
     ]
   },
   {
@@ -92,24 +107,42 @@ const PRODUCT_CATALOG = [
     icon: Lock,
     desc: 'Encrypt client-server communication and display the green lock badge.',
     items: [
-      { name: 'Organization Validation (OV)', desc: 'Vets your organization credibility for consumer protection.', link: '/contact' },
-      { name: 'Domain Validation (DV)', desc: 'Automated basic security certificate ideal for blogs and landing pages.', link: '/contact' },
-      { name: 'Extended Validation (EV)', desc: 'Premium verification with highest level of trust display.', link: '/contact' },
-      { name: 'Single Domain SSL', desc: 'Secure one primary domain (www and non-www).', link: '/contact' },
-      { name: 'Wildcard SSL', desc: 'Secure main domain and unlimited subdomains (*.domain.co.za).', link: '/contact' },
-      { name: 'Multi-Domain SSL', desc: 'Secure multiple distinct domains on one certificate.', link: '/contact' }
+      { name: 'SSL South Africa', desc: 'Localized SSL support tailored for corporate compliance.', link: '/services/ssl' },
+      { name: 'Comodo SSL Certificates', desc: 'Industry-standard encryption matching secure banking portals.', link: '/services/ssl' },
+      { name: 'RapidSSL Certificates', desc: 'Fast deployment automated validation certificates.', link: '/services/ssl' },
+      { name: 'GeoTrust SSL Certificates', desc: 'Advanced multi-domain trust certificates for corporate footprints.', link: '/services/ssl' },
+      { name: 'Thawte SSL Certificates', desc: 'Highly trusted validation certificates for enterprises.', link: '/services/ssl' },
+      { name: 'Domain Validation (DV)', desc: 'Automated basic security certificate ideal for blogs and landing pages.', link: '/services/ssl' },
+      { name: 'Extended Validation (EV)', desc: 'Premium verification with highest level of trust display.', link: '/services/ssl' },
+      { name: 'Single Domain SSL', desc: 'Secure one primary domain (www and non-www).', link: '/services/ssl' },
+      { name: 'Wildcard SSL', desc: 'Secure main domain and unlimited subdomains (*.domain.co.za).', link: '/services/ssl' },
+      { name: 'Multi-Domain SSL', desc: 'Secure multiple distinct domains on one certificate.', link: '/services/ssl' }
     ]
   },
   {
     id: 'resellers',
     title: 'Resellers & Enterprise',
     icon: Users,
-    desc: 'High-volume custom packages tailored for design agencies and system integrators.',
+    desc: 'High-volume custom packages tailored for design agencies and resellers.',
     items: [
-      { name: 'SSL Certificates', desc: 'Bulk SSL provisioning with simple API integrations.', link: '/contact' },
-      { name: 'Reseller Hosting', desc: 'Manage client accounts with custom Plesk resellers quotas.', link: '/contact' },
-      { name: 'Enterprise Hosting', desc: 'High-resource limits, dedicated database pools, and SLAs.', link: '/contact' },
-      { name: 'LiteSpeed Hosting', desc: 'Turbo-charge server loading speeds with LiteSpeed web servers.', link: '/contact' }
+      { name: 'Domain Resellers', desc: 'Wholesale domain registration portal with automation APIs.', link: '/services/resellers' },
+      { name: 'African Domains for Resellers', desc: 'African registry lookups and bulk actions (e.g. .za, .africa).', link: '/services/resellers' },
+      { name: 'LiteSpeed Hosting Reseller', desc: 'LiteSpeed-powered white-labeled packages for high speed demands.', link: '/services/resellers' },
+      { name: 'Web Hosting Reseller', desc: 'Standard master reseller Plesk dashboards and account quotas.', link: '/services/resellers' },
+      { name: 'Affiliates Program', desc: 'Refer hosting packages and earn recurrent monthly percentages.', link: '/services/resellers' },
+      { name: 'IT Partner Programme', desc: 'Partner with Imagine to deploy co-located servers and support SLAs.', link: '/services/resellers' }
+    ]
+  },
+  {
+    id: 'support',
+    title: 'Customer Support',
+    icon: BookOpen,
+    desc: '24/7 technical networks helpdesk and service status alerts.',
+    items: [
+      { name: 'Network Status', desc: 'Live server metrics, core router links status, and updates.', link: '/services/support' },
+      { name: 'Announcements', desc: 'Official notifications regarding maintenance and updates.', link: '/news' },
+      { name: 'Knowledge Base', desc: 'Self-help setup guides and tutorial videos for Plesk, domains, and mail.', link: '/services/support' },
+      { name: 'Open Support Ticket', desc: 'Submit details of support query directly to engineers.', link: '/contact' }
     ]
   }
 ];
