@@ -118,21 +118,32 @@ const Footer = () => {
             <Logo height={40} />
           </div>
           <p className="mt-4 text-sm text-gray-400 max-w-xs leading-relaxed">
-            Imagine IPS is a premium South African Internet Service Provider,
-            connecting people for smarter living since 2005.
+            Imagine IPS is an Internet Service Provider established in 1999, dedicated to providing clients with the very best connectivity and voice solutions.
           </p>
+          <div className="mt-4 text-xs text-slate-400 space-y-1">
+            <p><strong>Address:</strong> 158 Jan Smuts Ave, Rosebank, 2121</p>
+            <p><strong>Phone:</strong> 011 214 7600</p>
+            <p><strong>Email:</strong> helpdesk@imagine.co.za</p>
+          </div>
           <div className="mt-6 flex items-center gap-3">
-            {[Facebook, Twitter, Instagram, Linkedin].map((I, i) => (
-              <a
-                key={i}
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                className="w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-imagine-red hover:border-imagine-red flex items-center justify-center transition-colors"
-                aria-label="social link"
-              >
-                <I size={16} />
-              </a>
-            ))}
+            <a
+              href="https://www.facebook.com/Imagine-IPS-1647127935569779/?fref=ts"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-imagine-red hover:border-imagine-red flex items-center justify-center transition-colors text-white"
+              aria-label="Facebook"
+            >
+              <Facebook size={16} />
+            </a>
+            <a
+              href="https://twitter.com/Imagine_IPS"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-imagine-red hover:border-imagine-red flex items-center justify-center transition-colors text-white"
+              aria-label="Twitter"
+            >
+              <Twitter size={16} />
+            </a>
           </div>
         </div>
 
@@ -144,12 +155,23 @@ const Footer = () => {
             <ul className="space-y-2.5">
               {g.links.map((l) => (
                 <li key={l.label}>
-                  <Link
-                    to={l.to}
-                    className="text-sm text-gray-400 hover:text-imagine-red transition-colors"
-                  >
-                    {l.label}
-                  </Link>
+                  {l.to.startsWith('http') ? (
+                    <a
+                      href={l.to}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-gray-400 hover:text-imagine-red transition-colors"
+                    >
+                      {l.label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={l.to}
+                      className="text-sm text-gray-400 hover:text-imagine-red transition-colors"
+                    >
+                      {l.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -157,21 +179,28 @@ const Footer = () => {
         ))}
       </div>
 
-      <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-gray-500">
+      {/* ISPA & Legal Bar */}
+      <div className="border-t border-white/10 bg-slate-950/60">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400">
           <div>
-            © {new Date().getFullYear()} Imagine IPS. All rights reserved.
+            © {new Date().getFullYear()} Imagine IPS (Benwest Internet Services t/a Imagine IPS). Member of ISPA.
           </div>
-          <div className="flex items-center gap-4">
-            <Link to="/contact" className="hover:text-imagine-red">
-              Terms
-            </Link>
-            <Link to="/contact" className="hover:text-imagine-red">
-              Privacy
-            </Link>
-            <Link to="/contact" className="hover:text-imagine-red">
+          <div className="flex flex-wrap items-center gap-4">
+            <a href="https://ispa.org.za/tdn/" target="_blank" rel="noopener noreferrer" className="hover:text-white underline">
+              ISPA Take Down Notice Info
+            </a>
+            <a href="https://www.imagine.co.za/terms-and-conditions/" target="_blank" rel="noopener noreferrer" className="hover:text-white">
+              Terms & Conditions
+            </a>
+            <a href="https://www.imagine.co.za/privacy-policy/" target="_blank" rel="noopener noreferrer" className="hover:text-white">
+              Privacy Policy
+            </a>
+            <a href="https://www.imagine.co.za/acceptable-use-policy/" target="_blank" rel="noopener noreferrer" className="hover:text-white">
               AUP
-            </Link>
+            </a>
+            <a href="https://www.imagine.co.za/protecting-minors/" target="_blank" rel="noopener noreferrer" className="hover:text-white">
+              Protecting Minors
+            </a>
           </div>
         </div>
       </div>
@@ -180,3 +209,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

@@ -48,12 +48,22 @@ const Header = () => {
           </a>
         </div>
         <div className="flex items-center gap-4">
-          <a href="#webmail" className="hover:text-[#E4002B] transition-colors">
+          <a
+            href="https://webmail.imagine.co.za/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-[#E4002B] transition-colors"
+          >
             Webmail
           </a>
-          <Link to="/contact" className="hover:text-[#E4002B] transition-colors">
-            Client Portal
-          </Link>
+          <a
+            href="https://ataglance.imagine.co.za/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-[#E4002B] transition-colors"
+          >
+            Client Portal (AtAGlance)
+          </a>
         </div>
       </div>
 
