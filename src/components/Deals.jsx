@@ -114,7 +114,7 @@ const Deals = () => {
                       : 'bg-[#0f1720] hover:bg-imagine-red text-white'
                   }`}
                 >
-                  <Link to="/contact">Get this deal</Link>
+                  <a href="https://ataglance.imagine.co.za/" target="_blank" rel="noopener noreferrer">Order on Client Portal</a>
                 </Button>
               </div>
             </div>

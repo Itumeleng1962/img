@@ -212,7 +212,7 @@ export default function Footer() {
               <span>{g.title}</span>
               {g.badge && (
                 <span className={`text-[8px] font-black px-1 py-0.5 rounded-sm tracking-wider text-white ${
-                  g.badge === 'TRY ME' ? 'bg-[#1877f2]' : 'bg-orange-500'
+                  g.badge === 'TRY ME' ? 'bg-[#1877f2]' : 'bg-[#E4002B]'
                 }`}>
                   {g.badge}
                 </span>

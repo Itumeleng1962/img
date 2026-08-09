@@ -68,7 +68,7 @@ const Header = () => {
             className="hover:text-[#E4002B] transition-colors flex items-center gap-1"
           >
             Resellers{' '}
-            <span className="text-[8px] bg-orange-500 text-white px-1 py-0.5 rounded font-bold leading-none">
+            <span className="text-[8px] bg-[#E4002B] text-white px-1 py-0.5 rounded font-bold leading-none">
               NEW
             </span>
           </Link>
@@ -118,7 +118,7 @@ const Header = () => {
               >
                 {link.badge && (
                   <span className={`text-[8px] font-black px-1 py-0.5 rounded-sm leading-none mb-1 uppercase tracking-wider ${
-                    link.badge === 'TRY ME' ? 'bg-[#1877f2] text-white' : 'bg-orange-500 text-white'
+                    link.badge === 'TRY ME' ? 'bg-[#1877f2] text-white' : 'bg-[#E4002B] text-white'
                   }`}>
                     {link.badge}
                   </span>
@@ -218,7 +218,7 @@ const Header = () => {
                 className="font-bold text-gray-800 hover:text-[#E4002B] flex items-center gap-1"
               >
                 Resellers{' '}
-                <span className="text-[8px] bg-orange-500 text-white px-1 py-0.5 rounded font-bold leading-none">
+                <span className="text-[8px] bg-[#E4002B] text-white px-1 py-0.5 rounded font-bold leading-none">
                   NEW
                 </span>
               </Link>
@@ -235,7 +235,7 @@ const Header = () => {
                   </Link>
                   {l.badge && (
                     <span className={`text-[8px] font-black px-1 py-0.5 rounded-sm uppercase tracking-wider text-white ${
-                      l.badge === 'TRY ME' ? 'bg-[#1877f2]' : 'bg-orange-500'
+                      l.badge === 'TRY ME' ? 'bg-[#1877f2]' : 'bg-[#E4002B]'
                     }`}>
                       {l.badge}
                     </span>

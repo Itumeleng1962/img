@@ -408,7 +408,7 @@ export default function HostingOrderPage() {
                         required
                         value={customer.name}
                         onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
-                        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs text-gray-900 outline-none focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs text-gray-900 outline-none focus:ring-1 focus:ring-[#E4002B] focus:border-[#E4002B] transition-all"
                         placeholder="John Doe"
                       />
                     </div>
@@ -420,7 +420,7 @@ export default function HostingOrderPage() {
                         required
                         value={customer.email}
                         onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
-                        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs text-gray-900 outline-none focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs text-gray-900 outline-none focus:ring-1 focus:ring-[#E4002B] focus:border-[#E4002B] transition-all"
                         placeholder="john@example.com"
                       />
                     </div>
@@ -432,7 +432,7 @@ export default function HostingOrderPage() {
                         required
                         value={customer.phone}
                         onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
-                        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs text-gray-900 outline-none focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs text-gray-900 outline-none focus:ring-1 focus:ring-[#E4002B] focus:border-[#E4002B] transition-all"
                         placeholder="+27 82 000 0000"
                       />
                     </div>
@@ -443,17 +443,19 @@ export default function HostingOrderPage() {
                         type="text"
                         value={customer.company}
                         onChange={(e) => setCustomer({ ...customer, company: e.target.value })}
-                        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs text-gray-900 outline-none focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs text-gray-900 outline-none focus:ring-1 focus:ring-[#E4002B] focus:border-[#E4002B] transition-all"
                         placeholder="Acme Corp"
                       />
                     </div>
 
-                    <button
-                      type="submit"
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors shadow-md"
+                    <a
+                      href={selectedPlan.orderUrl || 'https://ataglance.imagine.co.za/cart.php'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full bg-[#E4002B] hover:bg-[#c40025] text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors shadow-md"
                     >
-                      Complete Order
-                    </button>
+                      Complete Order on Client Portal
+                    </a>
                   </form>
                 )}
               </div>

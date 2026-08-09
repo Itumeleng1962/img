@@ -187,20 +187,20 @@ const CoverageBar = ({ compact = false }) => {
           )}
 
           {state === 'done' && result && !result.available && (
-            <div className="mt-5 rounded-2xl bg-amber-50 border border-amber-200 p-5">
+            <div className="mt-5 rounded-2xl bg-red-50 border border-red-200 p-5">
               <div className="flex items-start gap-3">
-                <XCircle className="text-amber-600 mt-0.5 shrink-0" size={22} />
+                <XCircle className="text-[#E4002B] mt-0.5 shrink-0" size={22} />
                 <div>
-                  <div className="font-display font-extrabold text-amber-900 text-lg">
+                  <div className="font-display font-extrabold text-red-950 text-lg">
                     Not live in your area yet.
                   </div>
-                  <div className="text-sm text-amber-800">
+                  <div className="text-sm text-red-900">
                     Imagine is rolling out to new areas every week. Join our
                     waiting list to be first-in-line when we go live.
                   </div>
                   <Button
                     asChild
-                    className="mt-4 rounded-full bg-amber-600 hover:bg-amber-700 text-white h-11 px-5"
+                    className="mt-4 rounded-full bg-[#E4002B] hover:bg-[#c40025] text-white h-11 px-5"
                   >
                     <Link to="/contact">Join the waiting list</Link>
                   </Button>

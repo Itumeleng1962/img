@@ -223,11 +223,11 @@ export default function ServicesPage() {
                   {cat.items.map((item) => (
                     <div
                       key={item.name}
-                      className="bg-white rounded-2xl p-5 border border-gray-100 hover:border-orange-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group"
+                      className="bg-white rounded-2xl p-5 border border-gray-100 hover:border-[#E4002B]/40 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group"
                     >
                       <div>
                         <div className="flex justify-between items-start gap-2">
-                          <h3 className="font-bold text-base text-gray-800 group-hover:text-orange-500 transition-colors">
+                          <h3 className="font-bold text-base text-gray-800 group-hover:text-[#E4002B] transition-colors">
                             {item.name}
                           </h3>
                         </div>
@@ -237,7 +237,7 @@ export default function ServicesPage() {
                       </div>
 
                       <div className="mt-5 pt-3 border-t border-gray-50 flex items-center justify-between">
-                        <span className="text-[10px] uppercase tracking-wider font-extrabold text-gray-300 group-hover:text-orange-400 transition-colors">
+                        <span className="text-[10px] uppercase tracking-wider font-extrabold text-gray-300 group-hover:text-[#E4002B] transition-colors">
                           Imagine IPS
                         </span>
                         {item.link.startsWith('http') ? (
@@ -271,7 +271,7 @@ export default function ServicesPage() {
 
       {/* ── CYBER SECURITY SUITE NOTICE ──────────────────────────────────── */}
       <section className="bg-gray-50 py-16 px-6 lg:px-10">
-        <div className="max-w-4xl mx-auto rounded-3xl bg-[#0d1f3c] text-white p-8 md:p-10 relative overflow-hidden shadow-xl">
+        <div className="max-w-4xl mx-auto rounded-3xl bg-[#0f1720] text-white p-8 md:p-10 relative overflow-hidden shadow-xl">
           <span className="absolute top-0 right-0 w-44 h-44 rounded-full pointer-events-none"
             style={{ background: 'radial-gradient(circle, rgba(228,0,43,0.15) 0%, transparent 70%)', transform: 'translate(20%, -20%)' }} />
 
@@ -283,13 +283,13 @@ export default function ServicesPage() {
               <h3 className="text-xl md:text-2xl font-black">
                 Need Cyber Insurance & Threat Advice?
               </h3>
-              <p className="text-xs text-blue-200 leading-relaxed max-w-xl">
+              <p className="text-xs text-gray-300 leading-relaxed max-w-xl">
                 Cyberattacks are on the rise in South Africa. Our tech consultants assist companies in reviewing vulnerability profiles, setting up 2FA protection, securing domains, and advising on cyber liability coverage options.
               </p>
             </div>
             <Link
               to="/contact"
-              className="shrink-0 bg-white text-[#0d1f3c] hover:bg-orange-50 font-bold px-6 py-3 rounded-xl text-sm flex items-center gap-1.5 transition-colors shadow"
+              className="shrink-0 bg-white text-[#0f1720] hover:bg-red-50 font-bold px-6 py-3 rounded-xl text-sm flex items-center gap-1.5 transition-colors shadow"
             >
               Get Free Consultation <ArrowRight size={15} />
             </Link>

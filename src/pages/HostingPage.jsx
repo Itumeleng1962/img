@@ -126,25 +126,24 @@ export default function HostingPage() {
       >
         {/* decorative blobs */}
         <span className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(244,126,32,0.15) 0%, transparent 70%)', transform: 'translate(30%,-30%)' }} />
+          style={{ background: 'radial-gradient(circle, rgba(228,0,43,0.15) 0%, transparent 70%)', transform: 'translate(30%,-30%)' }} />
         <span className="absolute bottom-0 left-0 w-80 h-80 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(244,126,32,0.10) 0%, transparent 70%)', transform: 'translate(-30%,30%)' }} />
+          style={{ background: 'radial-gradient(circle, rgba(228,0,43,0.10) 0%, transparent 70%)', transform: 'translate(-30%,30%)' }} />
 
         <div className="relative max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
           {/* Copy */}
           <div>
-            <span className="inline-flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full mb-5 border border-orange-500/40"
-              style={{ background: 'rgba(244,126,32,0.15)', color: '#f47e20' }}>
+            <span className="inline-flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full mb-5 border border-[#E4002B]/40 bg-[#E4002B]/10 text-red-400">
               <Server size={12} /> Easy, Powerful Website Hosting
             </span>
 
             <h1 className="text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-5">
               Fast, Local & Reliable<br />
-              <span style={{ color: '#f47e20' }}>Web Hosting</span>
+              <span className="text-[#E4002B]">Web Hosting</span>
             </h1>
 
-            <p className="text-blue-200 text-lg leading-relaxed mb-6 max-w-xl">
+            <p className="text-gray-300 text-lg leading-relaxed mb-6 max-w-xl">
               Imagine IPS offers super fast, easy to manage website hosting solutions to suit
               your needs and budget — including migration assistance, your own <strong className="text-white">.co.za domain</strong>,
               emails, database functionality and more.
@@ -168,8 +167,7 @@ export default function HostingPage() {
 
             <div className="flex flex-wrap gap-3">
               <a href="#plans"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white shadow-lg transition-opacity hover:opacity-90"
-                style={{ background: '#f47e20' }}>
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white shadow-lg transition-opacity hover:opacity-90 bg-[#E4002B]">
                 View Plans <ChevronRight size={15} />
               </a>
               <a href={`mailto:${contactDetails.salesEmail}`}
@@ -188,7 +186,7 @@ export default function HostingPage() {
                 {[...Array(7)].map((_, i) => (
                   <div key={i} className="flex items-center gap-2.5 bg-white/5 rounded-lg px-3 py-2 border border-white/5">
                     <span className="w-2 h-2 rounded-full shrink-0 animate-pulse"
-                      style={{ background: i % 3 === 0 ? '#f47e20' : '#4ade80', animationDelay: `${i * 0.25}s` }} />
+                      style={{ background: i % 3 === 0 ? '#E4002B' : '#4ade80', animationDelay: `${i * 0.25}s` }} />
                     <div className="flex-1 space-y-1">
                       <div className="h-1.5 bg-white/10 rounded-full w-3/4" />
                     </div>
@@ -197,7 +195,7 @@ export default function HostingPage() {
                 ))}
               </div>
               <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-40 h-6 blur-xl rounded-full"
-                style={{ background: '#f47e20', opacity: 0.3 }} />
+                style={{ background: '#E4002B', opacity: 0.3 }} />
             </div>
           </div>
         </div>
@@ -220,8 +218,7 @@ export default function HostingPage() {
             >
               {c.label}
               {c.badge && (
-                <span className="absolute -top-2.5 -right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white"
-                  style={{ background: '#f47e20' }}>
+                <span className="absolute -top-2.5 -right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white bg-[#E4002B]">
                   {c.badge}
                 </span>
               )}
@@ -241,23 +238,22 @@ export default function HostingPage() {
               className={`relative rounded-2xl flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
                 pkg.popular
                   ? 'ring-2 shadow-2xl scale-[1.02]'
-                  : 'bg-white shadow border border-gray-200 hover:border-orange-300'
+                  : 'bg-white shadow border border-gray-200 hover:border-[#E4002B]/40'
               }`}
               style={pkg.popular ? {
-                background: 'linear-gradient(160deg, #0d1f3c 0%, #1a3a6b 100%)',
-                '--tw-ring-color': '#f47e20',
+                background: 'linear-gradient(160deg, #0f1720 0%, #1a2736 100%)',
+                '--tw-ring-color': '#E4002B',
               } : {}}
             >
               {pkg.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 text-[11px] font-extrabold text-white rounded-full uppercase tracking-widest"
-                  style={{ background: '#f47e20' }}>
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 text-[11px] font-extrabold text-white rounded-full uppercase tracking-widest bg-[#E4002B]">
                   ★ Most Popular
                 </div>
               )}
 
               <div className="p-6 flex flex-col flex-1">
                 {/* Plan name */}
-                <div className={`text-xs font-bold uppercase tracking-widest mb-1 ${pkg.popular ? 'text-orange-300' : 'text-gray-400'}`}>
+                <div className={`text-xs font-bold uppercase tracking-widest mb-1 ${pkg.popular ? 'text-red-400' : 'text-gray-400'}`}>
                   {pkg.name}
                 </div>
 
@@ -267,12 +263,12 @@ export default function HostingPage() {
                     <span className={`text-4xl font-extrabold ${pkg.popular ? 'text-white' : 'text-gray-900'}`}>
                       {priceFor(pkg.price)}
                     </span>
-                    <span className={`text-sm font-semibold ml-1 ${pkg.popular ? 'text-blue-200' : 'text-gray-400'}`}>
+                    <span className={`text-sm font-semibold ml-1 ${pkg.popular ? 'text-gray-300' : 'text-gray-400'}`}>
                       {termLabel}
                     </span>
                   </div>
                   {cycle !== 'monthly' && (
-                    <p className={`text-xs mt-1 ${pkg.popular ? 'text-blue-300' : 'text-gray-400'}`}>
+                    <p className={`text-xs mt-1 ${pkg.popular ? 'text-gray-300' : 'text-gray-400'}`}>
                       R{pkg.price}p/m billed {cycle === 'annual' ? 'annually' : 'every 2 years'}
                     </p>
                   )}
@@ -286,21 +282,23 @@ export default function HostingPage() {
                   {[pkg.storage, pkg.emails, pkg.databases, pkg.traffic, pkg.domain].map((feat) => (
                     <li key={feat} className="flex items-start gap-2">
                       <Check size={14} className="mt-0.5 shrink-0 text-green-400" />
-                      <span className={pkg.popular ? 'text-blue-100' : 'text-gray-600'}>{feat}</span>
+                      <span className={pkg.popular ? 'text-gray-200' : 'text-gray-600'}>{feat}</span>
                     </li>
                   ))}
                 </ul>
 
-                {/* CTA */}
-                <Link
-                  to={`/services/hosting/order?plan=${pkg.id}`}
-                  className="w-full py-3 rounded-xl text-center font-bold text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
+                {/* CTA -> Client Portal */}
+                <a
+                  href={pkg.orderUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 rounded-xl text-center font-bold text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-md"
                   style={pkg.popular
-                    ? { background: '#f47e20', color: '#fff' }
-                    : { background: '#0d1f3c', color: '#fff' }}
+                    ? { background: '#E4002B', color: '#fff' }
+                    : { background: '#0f1720', color: '#fff' }}
                 >
-                  ORDER NOW <ArrowRight size={14} />
-                </Link>
+                  ORDER ON CLIENT PORTAL <ArrowRight size={14} />
+                </a>
               </div>
             </div>
           ))}
@@ -320,7 +318,7 @@ export default function HostingPage() {
       <section className="py-12 px-6 lg:px-10 bg-white border-t border-b border-gray-100">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-16">
           <div className="flex-1">
-            <h2 className="text-2xl font-extrabold mb-2" style={{ color: '#0d1f3c' }}>
+            <h2 className="text-2xl font-extrabold mb-2 text-[#0f1720]">
               Thinking of transferring to Imagine?
             </h2>
             <p className="text-gray-500 text-sm leading-relaxed">
@@ -330,11 +328,12 @@ export default function HostingPage() {
             </p>
           </div>
           <a
-            href="#contact-form"
-            className="shrink-0 inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm text-white shadow-lg transition-opacity hover:opacity-90"
-            style={{ background: '#f47e20' }}
+            href="https://ataglance.imagine.co.za/cart.php?a=add&domain=transfer"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm text-white shadow-lg transition-opacity hover:opacity-90 bg-[#E4002B]"
           >
-            Contact Us <ArrowRight size={15} />
+            Transfer on Client Portal <ArrowRight size={15} />
           </a>
         </div>
       </section>
@@ -357,7 +356,7 @@ export default function HostingPage() {
                 className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group">
                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
                   style={{ background: 'linear-gradient(135deg, #0d1f3c, #1a3a6b)' }}>
-                  <Icon size={20} style={{ color: '#f47e20' }} />
+                  <Icon size={20} style={{ color: '#E4002B' }} />
                 </div>
                 <h3 className="font-bold text-base mb-2" style={{ color: '#0d1f3c' }}>{title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{body}</p>
@@ -392,7 +391,7 @@ export default function HostingPage() {
               <div key={title} className="flex gap-4 p-5 rounded-2xl border border-gray-100 bg-gray-50 hover:border-orange-200 hover:bg-orange-50/30 transition-all">
                 <div className="w-10 h-10 shrink-0 rounded-xl flex items-center justify-center"
                   style={{ background: 'linear-gradient(135deg, #0d1f3c, #1a3a6b)' }}>
-                  <Icon size={17} style={{ color: '#f47e20' }} />
+                  <Icon size={17} style={{ color: '#E4002B' }} />
                 </div>
                 <div>
                   <h3 className="font-bold text-sm mb-1" style={{ color: '#0d1f3c' }}>{title}</h3>
@@ -424,19 +423,19 @@ export default function HostingPage() {
 
             <div className="space-y-4 text-sm text-blue-100">
               <div className="flex items-center gap-3">
-                <Phone size={16} style={{ color: '#f47e20' }} />
+                <Phone size={16} style={{ color: '#E4002B' }} />
                 <a href={`tel:${contactDetails.phone}`} className="hover:text-white transition-colors">
                   {contactDetails.displayPhone}
                 </a>
               </div>
               <div className="flex items-center gap-3">
-                <Mail size={16} style={{ color: '#f47e20' }} />
+                <Mail size={16} style={{ color: '#E4002B' }} />
                 <a href={`mailto:${contactDetails.salesEmail}`} className="hover:text-white transition-colors">
                   {contactDetails.salesEmail}
                 </a>
               </div>
               <div className="flex items-start gap-3">
-                <MapPin size={16} className="mt-0.5 shrink-0" style={{ color: '#f47e20' }} />
+                <MapPin size={16} className="mt-0.5 shrink-0" style={{ color: '#E4002B' }} />
                 <span>{contactDetails.address}</span>
               </div>
             </div>
@@ -446,7 +445,7 @@ export default function HostingPage() {
           <div className="bg-white rounded-2xl p-8 shadow-2xl">
             {sent ? (
               <div className="text-center py-8">
-                <CheckCircle size={48} className="mx-auto mb-4" style={{ color: '#f47e20' }} />
+                <CheckCircle size={48} className="mx-auto mb-4" style={{ color: '#E4002B' }} />
                 <h3 className="text-xl font-extrabold mb-2" style={{ color: '#0d1f3c' }}>Thank you!</h3>
                 <p className="text-gray-500 text-sm">We've received your enquiry and will be in touch shortly.</p>
               </div>
@@ -465,7 +464,7 @@ export default function HostingPage() {
                         value={form.firstName}
                         onChange={(e) => setForm({ ...form, firstName: e.target.value })}
                         className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:border-orange-400 transition-all"
-                        style={{ '--tw-ring-color': '#f47e20' }}
+                        style={{ '--tw-ring-color': '#E4002B' }}
                         placeholder="First Name"
                       />
                     </div>
@@ -505,7 +504,7 @@ export default function HostingPage() {
                   <button
                     type="submit"
                     className="w-full py-3.5 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-lg"
-                    style={{ background: '#f47e20' }}
+                    style={{ background: '#E4002B' }}
                   >
                     Send Message <ArrowRight size={15} />
                   </button>
