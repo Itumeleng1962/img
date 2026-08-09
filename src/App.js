@@ -9,6 +9,7 @@ import ServicesPage from './pages/ServicesPage';
 import FibrePage from './pages/FibrePage';
 import VoicePage from './pages/VoicePage';
 import HostingPage from './pages/HostingPage';
+import HostingOrderPage from './pages/HostingOrderPage';
 import SupportPage from './pages/SupportPage';
 import CoveragePage from './pages/CoveragePage';
 import NewsPage from './pages/NewsPage';
@@ -29,6 +30,7 @@ function App() {
         <Route path="/services/fibre" element={<FibrePage />} />
         <Route path="/services/voice" element={<VoicePage />} />
         <Route path="/services/hosting" element={<HostingPage />} />
+        <Route path="/services/hosting/order" element={<HostingOrderPage />} />
         <Route path="/services/support" element={<SupportPage />} />
         <Route path="/coverage" element={<CoveragePage />} />
         <Route path="/news" element={<NewsPage />} />
@@ -40,4 +42,5 @@ function App() {
 }
 
 export default App;
+
 

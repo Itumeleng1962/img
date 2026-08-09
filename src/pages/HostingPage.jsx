@@ -292,17 +292,15 @@ export default function HostingPage() {
                 </ul>
 
                 {/* CTA */}
-                <a
-                  href={pkg.orderUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  to={`/services/hosting/order?plan=${pkg.id}`}
                   className="w-full py-3 rounded-xl text-center font-bold text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90"
                   style={pkg.popular
                     ? { background: '#f47e20', color: '#fff' }
                     : { background: '#0d1f3c', color: '#fff' }}
                 >
                   ORDER NOW <ArrowRight size={14} />
-                </a>
+                </Link>
               </div>
             </div>
           ))}

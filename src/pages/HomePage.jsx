@@ -9,6 +9,7 @@ import Deals from '../components/Deals';
 import WhyImagine from '../components/WhyImagine';
 import Testimonials from '../components/Testimonials';
 import News from '../components/News';
+import SocialFeed from '../components/SocialFeed';
 import FAQ from '../components/FAQ';
 import CTA from '../components/CTA';
 
@@ -23,6 +24,7 @@ const HomePage = () => {
       <WhyImagine />
       <Testimonials />
       <News />
+      <SocialFeed />
       <FAQ />
       <CTA />
     </Layout>

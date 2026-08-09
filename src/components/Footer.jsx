@@ -22,6 +22,7 @@ const footerGroups = [
       { label: 'Home Fibre', to: '/connect/home' },
       { label: 'Business Fibre', to: '/connect/business' },
       { label: 'VoIP Voice', to: '/services/voice' },
+      { label: 'Website Hosting', to: '/services/hosting' },
       { label: 'IT Support', to: '/services/support' },
     ],
   },
@@ -127,7 +128,7 @@ const Footer = () => {
           </div>
           <div className="mt-6 flex items-center gap-3">
             <a
-              href="https://www.facebook.com/Imagine-IPS-1647127935569779/?fref=ts"
+              href="https://www.facebook.com/profile.php?id=61587802821485"
               target="_blank"
               rel="noopener noreferrer"
               className="w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-imagine-red hover:border-imagine-red flex items-center justify-center transition-colors text-white"
