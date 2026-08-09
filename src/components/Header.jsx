@@ -84,34 +84,56 @@ const Header = () => {
                 to={link.to}
                 end={link.to === '/'}
                 className={({ isActive }) =>
-                  `px-4 py-2.5 text-sm font-semibold flex items-center gap-1 transition-colors ${
+                  `px-3 py-2 text-xs font-bold flex flex-col items-center relative transition-colors ${
                     isActive
                       ? 'text-[#E4002B]'
                       : 'text-[#0f1720] hover:text-[#E4002B]'
                   }`
                 }
               >
-                {link.label}
-                {link.submenu && (
-                  <ChevronDown
-                    size={14}
-                    className={`transition-transform ${
-                      openSub === link.label ? 'rotate-180' : ''
-                    }`}
-                  />
+                {link.badge && (
+                  <span className={`text-[8px] font-black px-1 py-0.5 rounded-sm leading-none mb-1 uppercase tracking-wider ${
+                    link.badge === 'TRY ME' ? 'bg-[#1877f2] text-white' : 'bg-orange-500 text-white'
+                  }`}>
+                    {link.badge}
+                  </span>
                 )}
+                {!link.badge && <span className="h-[13px] block" />} {/* Spacer to align text if no badge */}
+                <div className="flex items-center gap-0.5">
+                  {link.label}
+                  {link.submenu && (
+                    <ChevronDown
+                      size={12}
+                      className={`transition-transform ${
+                        openSub === link.label ? 'rotate-180' : ''
+                      }`}
+                    />
+                  )}
+                </div>
               </NavLink>
               {link.submenu && openSub === link.label && (
-                <div className="absolute top-full left-0 pt-2 z-50">
-                  <div className="bg-white rounded-xl border border-gray-100 shadow-2xl min-w-[220px] py-2 overflow-hidden">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
+                  <div className="bg-white rounded-xl border border-gray-100 shadow-2xl min-w-[240px] py-2 overflow-hidden">
                     {link.submenu.map((s) => (
-                      <Link
-                        key={s.label}
-                        to={s.to}
-                        className="block px-4 py-2.5 text-sm font-medium hover:bg-red-50 hover:text-[#E4002B] transition-colors"
-                      >
-                        {s.label}
-                      </Link>
+                      s.to.startsWith('http') ? (
+                        <a
+                          key={s.label}
+                          href={s.to}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-red-50 hover:text-[#E4002B] transition-colors"
+                        >
+                          {s.label}
+                        </a>
+                      ) : (
+                        <Link
+                          key={s.label}
+                          to={s.to}
+                          className="block px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-red-50 hover:text-[#E4002B] transition-colors"
+                        >
+                          {s.label}
+                        </Link>
+                      )
                     ))}
                   </div>
                 </div>
@@ -123,12 +145,12 @@ const Header = () => {
         <div className="hidden lg:flex items-center gap-3">
           <Link
             to="/coverage"
-            className="text-sm font-semibold text-[#0f1720] hover:text-[#E4002B] transition-colors"
+            className="text-xs font-bold text-[#0f1720] hover:text-[#E4002B] transition-colors"
           >
             Check Coverage
           </Link>
           <Button
-            className="bg-[#E4002B] hover:bg-[#c40025] text-white font-semibold rounded-full px-5"
+            className="bg-[#E4002B] hover:bg-[#c40025] text-white font-bold rounded-full px-4 py-1.5 h-9 text-xs"
             asChild
           >
             <Link to="/contact">Get Connected</Link>
@@ -148,30 +170,51 @@ const Header = () => {
         <div className="lg:hidden border-t border-gray-100 bg-white">
           <div className="px-6 py-4 flex flex-col gap-1 max-h-[70vh] overflow-y-auto">
             {navLinks.map((l) => (
-              <div key={l.label}>
-                <Link
-                  to={l.to}
-                  className="block py-3 font-semibold border-b border-gray-100"
-                >
-                  {l.label}
-                </Link>
+              <div key={l.label} className="py-2 border-b border-gray-100">
+                <div className="flex items-center gap-2">
+                  <Link
+                    to={l.to}
+                    className="font-bold text-sm text-[#0f1720]"
+                  >
+                    {l.label}
+                  </Link>
+                  {l.badge && (
+                    <span className={`text-[8px] font-black px-1 py-0.5 rounded-sm uppercase tracking-wider text-white ${
+                      l.badge === 'TRY ME' ? 'bg-[#1877f2]' : 'bg-orange-500'
+                    }`}>
+                      {l.badge}
+                    </span>
+                  )}
+                </div>
                 {l.submenu && (
-                  <div className="pl-4 py-1">
+                  <div className="pl-3 mt-1.5 space-y-1.5">
                     {l.submenu.map((s) => (
-                      <Link
-                        key={s.label}
-                        to={s.to}
-                        className="block py-2 text-sm text-gray-600"
-                      >
-                        {s.label}
-                      </Link>
+                      s.to.startsWith('http') ? (
+                        <a
+                          key={s.label}
+                          href={s.to}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block py-1.5 text-xs font-semibold text-gray-500 hover:text-[#E4002B]"
+                        >
+                          {s.label}
+                        </a>
+                      ) : (
+                        <Link
+                          key={s.label}
+                          to={s.to}
+                          className="block py-1.5 text-xs font-semibold text-gray-500 hover:text-[#E4002B]"
+                        >
+                          {s.label}
+                        </Link>
+                      )
                     ))}
                   </div>
                 )}
               </div>
             ))}
             <Button
-              className="mt-4 bg-[#E4002B] hover:bg-[#c40025] text-white rounded-full"
+              className="mt-4 bg-[#E4002B] hover:bg-[#c40025] text-white rounded-full w-full font-bold"
               asChild
             >
               <Link to="/contact">Get Connected</Link>

@@ -1,29 +1,86 @@
 // Mock data for Imagine IPS website scraped and synced from imagine.co.za
 
 export const navLinks = [
-  { label: 'Home', to: '/' },
   {
-    label: 'Connect',
-    to: '/connect',
+    label: 'Domains',
+    to: '/services/domains',
+    badge: 'NEW',
     submenu: [
-      { label: 'Home Fibre', to: '/connect/home' },
-      { label: 'Business', to: '/connect/business' },
-      { label: 'Estate & Complexes', to: '/connect/estate' },
+      { label: 'Domain Name Search', to: '/services/domains' },
+      { label: 'Domain Transfer', to: '/services/transfer' },
+      { label: 'Personal Domain', to: '/services/domains' },
     ],
   },
   {
-    label: 'Services',
-    to: '/services',
+    label: 'Hosting',
+    to: '/services/hosting',
     submenu: [
-      { label: 'Ultra-Fast Fibre', to: '/services/fibre' },
-      { label: 'VoIP Voice', to: '/services/voice' },
-      { label: 'Website Hosting', to: '/services/hosting' },
-      { label: 'IT Support', to: '/services/support' },
+      { label: 'Shared Hosting', to: '/services/hosting' },
+      { label: 'Hosting for WordPress', to: '/services/wordpress' },
+      { label: 'Reseller Hosting', to: '/services/resellers' },
+      { label: 'VPS Hosting', to: '/services/hosting' },
+      { label: 'Dedicated Servers', to: '/services/hosting' },
+      { label: 'Private Email Hosting', to: '/services/email' },
+      { label: 'Migrate to Imagine', to: '/services/transfer' },
     ],
   },
-  { label: 'Coverage', to: '/coverage' },
-  { label: 'News', to: '/news' },
-  { label: 'Contact', to: '/contact' },
+  {
+    label: 'WordPress',
+    to: '/services/wordpress',
+  },
+  {
+    label: 'Email',
+    to: '/services/email',
+    submenu: [
+      { label: 'Business Email', to: '/services/email' },
+      { label: 'Anti Spam Protection', to: '/services/security' },
+      { label: 'Login to Webmail', to: 'https://webmail.imagine.co.za/' },
+    ],
+  },
+  {
+    label: 'Security',
+    to: '/services/security',
+    badge: 'NEW',
+    submenu: [
+      { label: 'Domain Privacy', to: '/services/security' },
+      { label: 'Website Security', to: '/services/security' },
+      { label: 'Fix Hacked Website', to: '/services/security' },
+      { label: 'Cyber Insurance Advice', to: '/services/security' },
+      { label: '2FA Authentication', to: '/services/security' },
+    ],
+  },
+  {
+    label: 'Transfer to Us',
+    to: '/services/transfer',
+    badge: 'TRY ME',
+    submenu: [
+      { label: 'Domain Transfer', to: '/services/transfer' },
+      { label: 'Migrate Hosting', to: '/services/transfer' },
+    ],
+  },
+  {
+    label: 'SSL Certificates',
+    to: '/services/ssl',
+    submenu: [
+      { label: 'Organization Validation', to: '/services/ssl' },
+      { label: 'Domain Validation', to: '/services/ssl' },
+      { label: 'Extended Validation', to: '/services/ssl' },
+      { label: 'Single Domain', to: '/services/ssl' },
+      { label: 'Wildcard', to: '/services/ssl' },
+      { label: 'Multi-Domain', to: '/services/ssl' },
+    ],
+  },
+  {
+    label: 'Resellers',
+    to: '/services/resellers',
+    badge: 'NEW',
+    submenu: [
+      { label: 'SSL Certificates', to: '/services/ssl' },
+      { label: 'Reseller Hosting', to: '/services/resellers' },
+      { label: 'Enterprise Hosting', to: '/services/resellers' },
+      { label: 'LiteSpeed Hosting', to: '/services/resellers' },
+    ],
+  },
 ];
 
 export const contactDetails = {

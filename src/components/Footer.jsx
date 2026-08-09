@@ -1,12 +1,94 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
-import { Facebook, Twitter, Instagram, Linkedin, Send, Check } from 'lucide-react';
+import { Facebook, Twitter, Send, Check, ExternalLink } from 'lucide-react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { useToast } from '../hooks/use-toast';
 
-const footerGroups = [
+/* ─── Product Catalog Footer Groups ──────────────────────────────────────── */
+const catalogGroups = [
+  {
+    title: 'Domains',
+    badge: 'NEW',
+    links: [
+      { label: 'Domain Name Search', to: '/services/domains' },
+      { label: 'Domain Transfer', to: '/services/transfer' },
+      { label: 'Personal Domain', to: '/services/domains' },
+    ],
+  },
+  {
+    title: 'Hosting',
+    links: [
+      { label: 'Shared Hosting', to: '/services/hosting' },
+      { label: 'Hosting for WordPress', to: '/services/wordpress' },
+      { label: 'Reseller Hosting', to: '/services/resellers' },
+      { label: 'VPS Hosting', to: '/services/hosting' },
+      { label: 'Dedicated Servers', to: '/services/hosting' },
+      { label: 'Private Email Hosting', to: '/services/email' },
+      { label: 'Migrate to Imagine', to: '/services/transfer' },
+    ],
+  },
+  {
+    title: 'WordPress',
+    links: [
+      { label: 'WP Hosting Tiers', to: '/services/wordpress' },
+      { label: 'Plesk WP Toolkit', to: '/services/wordpress' },
+      { label: 'WordPress Migration', to: '/services/transfer' },
+    ],
+  },
+  {
+    title: 'Email',
+    links: [
+      { label: 'Business Email', to: '/services/email' },
+      { label: 'Anti Spam Protection', to: '/services/security' },
+      { label: 'Login to Webmail', to: 'https://webmail.imagine.co.za/' },
+    ],
+  },
+  {
+    title: 'Security',
+    badge: 'NEW',
+    links: [
+      { label: 'Domain Privacy', to: '/services/security' },
+      { label: 'Website Security', to: '/services/security' },
+      { label: 'Fix Hacked Website', to: '/services/security' },
+      { label: 'Cyber Insurance Advice', to: '/services/security' },
+      { label: '2FA Authentication', to: '/services/security' },
+    ],
+  },
+  {
+    title: 'Transfer to Us',
+    badge: 'TRY ME',
+    links: [
+      { label: 'Domain Transfer', to: '/services/transfer' },
+      { label: 'Migrate Hosting', to: '/services/transfer' },
+    ],
+  },
+  {
+    title: 'SSL Certificates',
+    links: [
+      { label: 'Organization Validation', to: '/services/ssl' },
+      { label: 'Domain Validation', to: '/services/ssl' },
+      { label: 'Extended Validation', to: '/services/ssl' },
+      { label: 'Single Domain', to: '/services/ssl' },
+      { label: 'Wildcard', to: '/services/ssl' },
+      { label: 'Multi-Domain', to: '/services/ssl' },
+    ],
+  },
+  {
+    title: 'Resellers',
+    badge: 'NEW',
+    links: [
+      { label: 'SSL Certificates', to: '/services/ssl' },
+      { label: 'Reseller Hosting', to: '/services/resellers' },
+      { label: 'Enterprise Hosting', to: '/services/resellers' },
+      { label: 'LiteSpeed Hosting', to: '/services/resellers' },
+    ],
+  },
+];
+
+/* ─── Corporate Footer Groups ────────────────────────────────────────────── */
+const corporateGroups = [
   {
     title: 'Company',
     links: [
@@ -17,36 +99,26 @@ const footerGroups = [
     ],
   },
   {
-    title: 'Services',
-    links: [
-      { label: 'Home Fibre', to: '/connect/home' },
-      { label: 'Business Fibre', to: '/connect/business' },
-      { label: 'VoIP Voice', to: '/services/voice' },
-      { label: 'Website Hosting', to: '/services/hosting' },
-      { label: 'IT Support', to: '/services/support' },
-    ],
-  },
-  {
     title: 'Support',
     links: [
       { label: 'Contact Us', to: '/contact' },
       { label: 'FAQ', to: '/contact' },
       { label: 'Coverage Map', to: '/coverage' },
-      { label: 'Webmail', to: '/contact' },
+      { label: 'Webmail', to: 'https://webmail.imagine.co.za/' },
     ],
   },
   {
     title: 'Legal',
     links: [
-      { label: 'Terms of Service', to: '/contact' },
-      { label: 'Privacy Policy', to: '/contact' },
-      { label: 'AUP', to: '/contact' },
-      { label: 'RICA Compliance', to: '/contact' },
+      { label: 'Terms of Service', to: 'https://www.imagine.co.za/terms-and-conditions/' },
+      { label: 'Privacy Policy', to: 'https://www.imagine.co.za/privacy-policy/' },
+      { label: 'AUP', to: 'https://www.imagine.co.za/acceptable-use-policy/' },
+      { label: 'RICA Compliance', to: 'https://www.imagine.co.za/wp-content/uploads/2016/10/FUP-Imagine-IPS.pdf' },
     ],
   },
 ];
 
-const Footer = () => {
+export default function Footer() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const { toast } = useToast();
@@ -113,13 +185,55 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 py-14 grid md:grid-cols-2 lg:grid-cols-6 gap-10">
-        <div className="lg:col-span-2">
+      {/* Primary Products Catalog Grid */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 py-14 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-8 border-b border-white/5">
+        {catalogGroups.map((g) => (
+          <div key={g.title} className="space-y-3">
+            <div className="text-[11px] font-black uppercase tracking-wider text-white flex flex-wrap items-center gap-1.5 leading-tight">
+              <span>{g.title}</span>
+              {g.badge && (
+                <span className={`text-[8px] font-black px-1 py-0.5 rounded-sm tracking-wider text-white ${
+                  g.badge === 'TRY ME' ? 'bg-[#1877f2]' : 'bg-orange-500'
+                }`}>
+                  {g.badge}
+                </span>
+              )}
+            </div>
+            <ul className="space-y-2">
+              {g.links.map((l) => (
+                <li key={l.label}>
+                  {l.to.startsWith('http') ? (
+                    <a
+                      href={l.to}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-gray-400 hover:text-imagine-red transition-colors block leading-tight"
+                    >
+                      {l.label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={l.to}
+                      className="text-xs text-gray-400 hover:text-imagine-red transition-colors block leading-tight"
+                    >
+                      {l.label}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {/* Secondary Corporate Info Grid */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 py-12 grid md:grid-cols-2 lg:grid-cols-6 gap-10">
+        <div className="lg:col-span-3">
           <div className="bg-white/95 rounded-xl inline-block px-3 py-2">
             <Logo height={40} />
           </div>
-          <p className="mt-4 text-sm text-gray-400 max-w-xs leading-relaxed">
-            Imagine IPS is an Internet Service Provider established in 1999, dedicated to providing clients with the very best connectivity and voice solutions.
+          <p className="mt-4 text-sm text-gray-400 max-w-sm leading-relaxed">
+            Imagine IPS is an Internet Service Provider established in 1999, dedicated to providing clients with the very best connectivity, SSD hosting, email solutions, and networks security.
           </p>
           <div className="mt-4 text-xs text-slate-400 space-y-1">
             <p><strong>Address:</strong> 158 Jan Smuts Ave, Rosebank, 2121</p>
@@ -136,20 +250,11 @@ const Footer = () => {
             >
               <Facebook size={16} />
             </a>
-            <a
-              href="https://twitter.com/Imagine_IPS"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-imagine-red hover:border-imagine-red flex items-center justify-center transition-colors text-white"
-              aria-label="Twitter"
-            >
-              <Twitter size={16} />
-            </a>
           </div>
         </div>
 
-        {footerGroups.map((g) => (
-          <div key={g.title}>
+        {corporateGroups.map((g) => (
+          <div key={g.title} className="lg:col-span-1">
             <div className="text-xs font-bold uppercase tracking-widest text-white mb-4">
               {g.title}
             </div>
@@ -161,14 +266,14 @@ const Footer = () => {
                       href={l.to}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-gray-400 hover:text-imagine-red transition-colors"
+                      className="text-sm text-gray-400 hover:text-imagine-red transition-colors block"
                     >
                       {l.label}
                     </a>
                   ) : (
                     <Link
                       to={l.to}
-                      className="text-sm text-gray-400 hover:text-imagine-red transition-colors"
+                      className="text-sm text-gray-400 hover:text-imagine-red transition-colors block"
                     >
                       {l.label}
                     </Link>
@@ -207,7 +312,4 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
-
-export default Footer;
-
+}

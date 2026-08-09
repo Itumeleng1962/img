@@ -10,6 +10,13 @@ import FibrePage from './pages/FibrePage';
 import VoicePage from './pages/VoicePage';
 import HostingPage from './pages/HostingPage';
 import HostingOrderPage from './pages/HostingOrderPage';
+import DomainsPage from './pages/DomainsPage';
+import WordPressPage from './pages/WordPressPage';
+import EmailHostingPage from './pages/EmailHostingPage';
+import SecurityPage from './pages/SecurityPage';
+import TransferPage from './pages/TransferPage';
+import SslPage from './pages/SslPage';
+import ResellersPage from './pages/ResellersPage';
 import SupportPage from './pages/SupportPage';
 import CoveragePage from './pages/CoveragePage';
 import NewsPage from './pages/NewsPage';
@@ -31,6 +38,13 @@ function App() {
         <Route path="/services/voice" element={<VoicePage />} />
         <Route path="/services/hosting" element={<HostingPage />} />
         <Route path="/services/hosting/order" element={<HostingOrderPage />} />
+        <Route path="/services/domains" element={<DomainsPage />} />
+        <Route path="/services/wordpress" element={<WordPressPage />} />
+        <Route path="/services/email" element={<EmailHostingPage />} />
+        <Route path="/services/security" element={<SecurityPage />} />
+        <Route path="/services/transfer" element={<TransferPage />} />
+        <Route path="/services/ssl" element={<SslPage />} />
+        <Route path="/services/resellers" element={<ResellersPage />} />
         <Route path="/services/support" element={<SupportPage />} />
         <Route path="/coverage" element={<CoveragePage />} />
         <Route path="/news" element={<NewsPage />} />
@@ -42,5 +56,6 @@ function App() {
 }
 
 export default App;
+
 
 
