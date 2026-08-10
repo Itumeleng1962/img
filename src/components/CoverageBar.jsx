@@ -1,311 +1,625 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Search,
   MapPin,
   Loader2,
   CheckCircle2,
-  XCircle,
-  Wifi,
   ArrowRight,
   Navigation,
   Globe,
-  Layers,
-  Sparkles
+  Sparkles,
+  Clock,
+  ChevronDown,
+  ChevronUp,
+  Zap,
+  X,
+  AlertCircle,
 } from 'lucide-react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { useToast } from '../hooks/use-toast';
 
-// Mocked coverage database
+/* ─── Network brand colors ─────────────────────────────────────────────────── */
+const NETWORK_BRANDS = {
+  Vumatel:       { bg: '#FF6600', text: '#fff', light: '#FFF3EB' },
+  Openserve:     { bg: '#005BAC', text: '#fff', light: '#EBF3FF' },
+  'Metro Fibre': { bg: '#6D28D9', text: '#fff', light: '#F3EEFF' },
+  Frogfoot:      { bg: '#10B981', text: '#fff', light: '#EDFDF8' },
+  Netstream:     { bg: '#0EA5E9', text: '#fff', light: '#E0F5FF' },
+  DNATel:        { bg: '#F59E0B', text: '#fff', light: '#FFFBEB' },
+  Evotel:        { bg: '#EC4899', text: '#fff', light: '#FFF0F8' },
+  MTN:           { bg: '#FFD700', text: '#0f1720', light: '#FFFDE7' },
+};
+
+/* ─── Coverage database ─────────────────────────────────────────────────────  */
 const COVERAGE_DB = [
   {
-    match: ['sandton', 'randburg', 'rosebank', 'sunninghill'],
+    match: ['sandton', 'randburg', 'rosebank', 'sunninghill', 'morningside', 'rivonia', 'alice lane', 'melrose', 'bryanston'],
     area: 'Sandton · Gauteng',
     networks: ['Vumatel', 'Openserve', 'Metro Fibre', 'Frogfoot'],
     speeds: '20 Mbps – 1 Gbps',
   },
   {
-    match: ['cape town', 'stellenbosch', 'somerset', 'claremont'],
+    match: ['cape town', 'stellenbosch', 'somerset', 'claremont', 'kloof', 'waterfront', 'sea point', 'green point', 'gardens'],
     area: 'Cape Town Metro',
     networks: ['Openserve', 'Frogfoot', 'Vumatel'],
     speeds: '25 Mbps – 1 Gbps',
   },
   {
-    match: ['durban', 'umhlanga', 'westville', 'ballito'],
+    match: ['durban', 'umhlanga', 'westville', 'ballito', 'florida road', 'berea', 'musgrave'],
     area: 'eThekwini · KZN',
     networks: ['Openserve', 'Vumatel', 'Metro Fibre'],
     speeds: '20 Mbps – 500 Mbps',
   },
   {
-    match: ['benoni', 'kempton', 'boksburg', 'edenvale', 'germiston'],
+    match: ['benoni', 'kempton', 'boksburg', 'edenvale', 'germiston', 'great north', 'atlas road'],
     area: 'East Rand · Gauteng',
     networks: ['Netstream', 'DNATel', 'Evotel', 'Openserve'],
     speeds: '20 Mbps – 1 Gbps',
   },
   {
-    match: ['pretoria', 'centurion', 'midrand', 'menlyn'],
+    match: ['pretoria', 'centurion', 'midrand', 'menlyn', 'lynnwood', 'waterfall', 'hatfield'],
     area: 'Tshwane · Gauteng',
     networks: ['Openserve', 'Vumatel', 'Metro Fibre'],
     speeds: '25 Mbps – 1 Gbps',
   },
+  {
+    match: ['johannesburg', 'braamfontein', 'jan smuts', 'stanley', 'melville', 'fourways'],
+    area: 'Johannesburg Central · Gauteng',
+    networks: ['Vumatel', 'Openserve', 'Metro Fibre'],
+    speeds: '20 Mbps – 1 Gbps',
+  },
 ];
 
+/* ─── Address suggestion bank ──────────────────────────────────────────────── */
+const ADDRESS_BANK = [
+  { main: '158 Jan Smuts Ave', sub: 'Rosebank, Johannesburg, Gauteng', icon: '🏢' },
+  { main: 'Sandton City Drive', sub: 'Sandton, Johannesburg, Gauteng', icon: '🏙️' },
+  { main: 'Rosebank Mall, Bath Ave', sub: 'Rosebank, Johannesburg', icon: '🏬' },
+  { main: '44 Stanley Ave', sub: 'Braamfontein, Johannesburg', icon: '🎨' },
+  { main: 'Alice Lane, Sandton Central', sub: 'Sandton, Johannesburg, Gauteng', icon: '🏢' },
+  { main: 'Rivonia Road', sub: 'Morningside, Sandton, Gauteng', icon: '🛣️' },
+  { main: 'Main Road, Claremont', sub: 'Claremont, Cape Town, Western Cape', icon: '🏘️' },
+  { main: 'Kloof Street', sub: 'Gardens, Cape Town, Western Cape', icon: '☕' },
+  { main: 'Victoria & Alfred Waterfront', sub: 'Cape Town, Western Cape', icon: '⛵' },
+  { main: 'Somerset West Boulevard', sub: 'Somerset West, Cape Town', icon: '🏡' },
+  { main: 'Umhlanga Rocks Drive', sub: 'Umhlanga, Durban, KZN', icon: '🌊' },
+  { main: 'Florida Road', sub: 'Morningside, Durban, KZN', icon: '🍽️' },
+  { main: 'Great North Road', sub: 'Benoni, East Rand, Gauteng', icon: '🛣️' },
+  { main: 'Atlas Road', sub: 'Boksburg & Kempton Park, Gauteng', icon: '🏭' },
+  { main: 'Lynnwood Road', sub: 'Menlyn, Pretoria, Tshwane', icon: '🎓' },
+  { main: 'Centurion Boulevard', sub: 'Centurion, Pretoria, Gauteng', icon: '🏢' },
+  { main: 'Midrand Corporate Park', sub: 'Midrand, Gauteng', icon: '🏗️' },
+  { main: 'Sunninghill Office Park', sub: 'Sunninghill, Sandton, Gauteng', icon: '🌳' },
+  { main: 'Waterfall City Parkway', sub: 'Waterfall Estate, Midrand', icon: '🏙️' },
+  { main: 'Melrose Arch Piazza', sub: 'Melrose, Johannesburg', icon: '🎭' },
+  { main: 'Fourways Mall Approach', sub: 'Fourways, Johannesburg, Gauteng', icon: '🏬' },
+  { main: 'Hatfield Square', sub: 'Hatfield, Pretoria, Tshwane', icon: '🎓' },
+];
+
+/* ─── Fibre packages ────────────────────────────────────────────────────────  */
+const FIBRE_PACKAGES = [
+  { speed: '20/10', price: 449, label: 'Essential', popular: false, perks: ['Uncapped', 'Month-to-Month', 'Free Router'] },
+  { speed: '50/25', price: 599, label: 'Standard', popular: true, perks: ['Uncapped', 'Month-to-Month', 'Free Installation'] },
+  { speed: '100/50', price: 799, label: 'Pro', popular: false, perks: ['Uncapped', 'Priority Support', 'Free Router'] },
+  { speed: '200/200', price: 1199, label: 'Ultra', popular: false, perks: ['Symmetrical', 'Dedicated Support', '24/7 Desk'] },
+];
+
+/* ─── Coverage lookup ───────────────────────────────────────────────────────  */
 export const checkCoverage = (address) => {
   const q = address.toLowerCase().trim();
   if (!q) return null;
-
   const hit = COVERAGE_DB.find((c) => c.match.some((k) => q.includes(k)));
-  if (hit) {
-    return {
-      available: true,
-      queryAddress: address,
-      area: hit.area,
-      networks: hit.networks,
-      speeds: hit.speeds,
-    };
-  }
-
-  // Format capitalized title for any address input (partial or full)
-  const formattedTitle = address
-    .split(' ')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
-
+  if (hit) return { available: true, queryAddress: address, ...hit };
+  const formattedTitle = address.split(' ').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   return {
     available: true,
     queryAddress: address,
-    area: `${formattedTitle} · Live Fibre Coverage Area`,
+    area: `${formattedTitle} · Fibre Coverage Area`,
     networks: ['Vumatel', 'Openserve', 'Metro Fibre', 'Frogfoot'],
     speeds: '25 Mbps – 1 Gbps',
   };
 };
 
+/* ─── Nominatim geocoder (free, no API key) ────────────────────────────────  */
+const geocodeAddress = async (address) => {
+  try {
+    const encoded = encodeURIComponent(address + ', South Africa');
+    const url = `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1&countrycodes=za&addressdetails=1`;
+    const res = await fetch(url, {
+      headers: { 'Accept-Language': 'en', 'User-Agent': 'ImagineFibreCoverageCheck/1.0' },
+    });
+    const data = await res.json();
+    if (data && data.length > 0) {
+      return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), displayName: data[0].display_name };
+    }
+  } catch (_) {}
+  return null;
+};
+
+/* ─── Nominatim address search (live lookup as you type) ──────────────────── */
+const searchAddresses = async (query) => {
+  if (!query || query.trim().length < 3) return [];
+  try {
+    const encoded = encodeURIComponent(query + ', South Africa');
+    const url = `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=6&countrycodes=za&addressdetails=1`;
+    const res = await fetch(url, {
+      headers: { 'Accept-Language': 'en', 'User-Agent': 'ImagineFibreCoverageCheck/1.0' },
+    });
+    const data = await res.json();
+    return data.map((item) => ({
+      main: item.display_name.split(',')[0],
+      sub: item.display_name.split(',').slice(1, 4).join(',').trim(),
+      full: item.display_name,
+      lat: parseFloat(item.lat),
+      lng: parseFloat(item.lon),
+      icon: item.type === 'residential' ? '🏡'
+           : item.type === 'commercial' ? '🏢'
+           : item.class === 'highway' ? '🛣️'
+           : item.class === 'amenity' ? '🏬'
+           : '📍',
+    }));
+  } catch (_) {
+    return [];
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
 const CoverageBar = ({ compact = false }) => {
   const [address, setAddress] = useState('');
-  const [state, setState] = useState('idle'); // idle | loading | done
+  const [state, setState] = useState('idle');
   const [result, setResult] = useState(null);
-  const [mapMode, setMapMode] = useState('satellite'); // satellite, street
+  const [coords, setCoords] = useState(null);        // { lat, lng, displayName }
+  const [geoState, setGeoState] = useState('idle');  // idle | loading | done | error
+  const [mapMode, setMapMode] = useState('satellite');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [sugLoading, setSugLoading] = useState(false);
+  const [showPackages, setShowPackages] = useState(false);
+
+  const inputRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const suggestTimer = useRef(null);
   const { toast } = useToast();
 
-  const check = (e) => {
-    e.preventDefault();
-    if (!address.trim()) {
-      toast({
-        title: 'Enter an address',
-        description: 'Please enter your street, suburb or city.',
-      });
+  /* Close on outside click */
+  useEffect(() => {
+    const handler = (e) => {
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(e.target) &&
+        inputRef.current && !inputRef.current.contains(e.target)
+      ) setShowSuggestions(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  /* Debounced Nominatim search as user types */
+  const handleInputChange = (e) => {
+    const val = e.target.value;
+    setAddress(val);
+    setShowSuggestions(true);
+
+    clearTimeout(suggestTimer.current);
+    if (val.trim().length < 2) {
+      setSuggestions(ADDRESS_BANK.slice(0, 6).map(s => ({ ...s, fromBank: true })));
+      return;
+    }
+
+    // Show static bank matches immediately
+    const bankMatches = ADDRESS_BANK.filter(
+      s => s.main.toLowerCase().includes(val.toLowerCase()) || s.sub.toLowerCase().includes(val.toLowerCase())
+    );
+    if (bankMatches.length > 0) setSuggestions(bankMatches.slice(0, 6).map(s => ({ ...s, fromBank: true })));
+
+    // Then fire Nominatim after 400ms debounce
+    suggestTimer.current = setTimeout(async () => {
+      setSugLoading(true);
+      const live = await searchAddresses(val);
+      if (live.length > 0) {
+        setSuggestions(live);
+      } else if (bankMatches.length === 0) {
+        // Fallback dynamic
+        const cap = val.charAt(0).toUpperCase() + val.slice(1);
+        setSuggestions([
+          { main: `${cap} Street`, sub: 'Johannesburg, Gauteng', icon: '📍', fromBank: true },
+          { main: `${cap} Avenue`, sub: 'Sandton, Gauteng', icon: '📍', fromBank: true },
+          { main: `${cap} Road`, sub: 'Cape Town, Western Cape', icon: '📍', fromBank: true },
+          { main: `${cap} Drive`, sub: 'Pretoria, Tshwane', icon: '📍', fromBank: true },
+        ]);
+      }
+      setSugLoading(false);
+    }, 400);
+  };
+
+  /* Run the full search + geocode */
+  const runSearch = useCallback(async (searchQuery, preCoords = null) => {
+    const q = (searchQuery || address).trim();
+    if (!q) {
+      toast({ title: 'Enter an address', description: 'Type your street, suburb or city.' });
       return;
     }
     setState('loading');
+    setGeoState('loading');
     setResult(null);
-    setTimeout(() => {
-      const r = checkCoverage(address);
-      setResult(r);
-      setState('done');
-      // Persist to history
-      const hist = JSON.parse(
-        localStorage.getItem('imagine_coverage_history') || '[]'
-      );
-      hist.unshift({ address, result: r, ts: Date.now() });
-      localStorage.setItem(
-        'imagine_coverage_history',
-        JSON.stringify(hist.slice(0, 10))
-      );
-    }, 1000);
+    setCoords(null);
+    setShowPackages(false);
+
+    // Coverage check (instant)
+    const r = checkCoverage(q);
+    setResult(r);
+    setState('done');
+
+    // Persist history
+    const hist = JSON.parse(localStorage.getItem('imagine_coverage_history') || '[]');
+    hist.unshift({ address: q, result: r, ts: Date.now() });
+    localStorage.setItem('imagine_coverage_history', JSON.stringify(hist.slice(0, 10)));
+
+    // Geocode for exact pin
+    if (preCoords) {
+      setCoords(preCoords);
+      setGeoState('done');
+    } else {
+      const geo = await geocodeAddress(q);
+      if (geo) {
+        setCoords(geo);
+        setGeoState('done');
+      } else {
+        setGeoState('error');
+      }
+    }
+  }, [address, toast]);
+
+  const handleSelectSuggestion = (sug) => {
+    const fullText = sug.full || `${sug.main}, ${sug.sub}`;
+    setAddress(fullText);
+    setShowSuggestions(false);
+    const preCoords = sug.lat && sug.lng ? { lat: sug.lat, lng: sug.lng, displayName: fullText } : null;
+    runSearch(fullText, preCoords);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setShowSuggestions(false);
+    runSearch(address);
+  };
+
+  /* On focus - show bank suggestions */
+  const handleFocus = () => {
+    if (suggestions.length === 0) setSuggestions(ADDRESS_BANK.slice(0, 6).map(s => ({ ...s, fromBank: true })));
+    setShowSuggestions(true);
+  };
+
+  /* Map src: use exact coordinates when available, else text search */
+  const getMapSrc = () => {
+    const t = mapMode === 'satellite' ? 'k' : 'm';
+    if (coords) {
+      // Exact lat/lng pin — most precise method
+      return `https://maps.google.com/maps?q=${coords.lat},${coords.lng}&t=${t}&z=17&ie=UTF8&iwloc=near&output=embed`;
+    }
+    return `https://maps.google.com/maps?q=${encodeURIComponent((result?.queryAddress || '') + ', South Africa')}&t=${t}&z=15&ie=UTF8&output=embed`;
+  };
+
+  const getGoogleMapsLink = () => {
+    if (coords) return `https://www.google.com/maps?q=${coords.lat},${coords.lng}&z=17`;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((result?.queryAddress || '') + ' South Africa')}`;
   };
 
   return (
     <section id="coverage" className={`relative ${compact ? 'py-6' : 'pt-14 md:pt-20 pb-4'} z-10`}>
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
         <div className="bg-white rounded-3xl border border-gray-100 shadow-2xl shadow-red-500/10 p-6 md:p-8">
-          <div className="grid md:grid-cols-[1.4fr_1fr] gap-6 items-center">
+
+          {/* ── Header ── */}
+          <div className="grid md:grid-cols-[1.4fr_1fr] gap-6 items-center mb-6">
             <div>
               <div className="flex items-center gap-2 text-[#E4002B] font-bold text-xs uppercase tracking-wider mb-2">
-                <MapPin size={14} /> Coverage Check & Pinpoint
+                <MapPin size={14} /> Live Coverage & Exact Map Pin
               </div>
               <h3 className="font-display text-2xl md:text-3xl font-extrabold text-[#0f1720]">
                 See if Imagine Fibre is live at your address.
               </h3>
               <p className="text-gray-500 mt-1 text-sm">
-                Enter any street address, suburb or partial location to drop your coverage pin.
+                Type any address and we'll geocode the exact location and drop a real map pin.
               </p>
             </div>
-            <form onSubmit={check} className="flex flex-col sm:flex-row gap-3">
+
+            {/* ── Search form ── */}
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1">
-                <Search
-                  size={18}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                />
-                <Input
+                <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none" />
+                <input
+                  ref={inputRef}
                   value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="e.g. 158 Jan Smuts, Sandton, Rosebank…"
-                  className="pl-11 h-14 rounded-full border-gray-200 focus-visible:ring-2 focus-visible:ring-[#E4002B]/40"
+                  onChange={handleInputChange}
+                  onFocus={handleFocus}
+                  placeholder="Type any street, suburb or full address…"
+                  className="pl-11 pr-10 h-14 w-full rounded-full border border-gray-200 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-[#E4002B]/40 focus:border-[#E4002B] transition-all bg-gray-50"
                 />
-              </div>
-              <Button
-                type="submit"
-                className="h-14 rounded-full px-7 bg-[#E4002B] hover:bg-[#c40025] text-white font-semibold"
-              >
-                {state === 'loading' ? (
-                  <Loader2 className="animate-spin" />
-                ) : (
-                  'Check Now'
+                {address && (
+                  <button type="button"
+                    onClick={() => { setAddress(''); setResult(null); setState('idle'); setCoords(null); setShowSuggestions(false); }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10">
+                    <X size={16} />
+                  </button>
                 )}
-              </Button>
+
+                {/* ── Suggestions dropdown ── */}
+                {showSuggestions && (
+                  <div ref={dropdownRef}
+                    className="absolute left-0 right-0 top-[62px] bg-white border border-gray-200 rounded-2xl shadow-2xl z-[999] overflow-hidden">
+
+                    <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                      <span className="text-[10px] uppercase font-extrabold tracking-wider text-gray-400 flex items-center gap-1.5">
+                        <MapPin size={10} />
+                        {sugLoading ? 'Searching addresses…' : address.length > 1 ? 'Live Results' : 'Popular Areas'}
+                      </span>
+                      <span className="text-[10px] font-bold text-[#E4002B]">Fibre Coverage Live ✓</span>
+                    </div>
+
+                    {sugLoading && (
+                      <div className="flex items-center gap-2 px-4 py-3 text-xs text-gray-500">
+                        <Loader2 size={13} className="animate-spin text-[#E4002B]" /> Searching exact addresses…
+                      </div>
+                    )}
+
+                    {suggestions.map((sug, idx) => (
+                      <button key={idx} type="button"
+                        onMouseDown={(e) => { e.preventDefault(); handleSelectSuggestion(sug); }}
+                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors text-left border-b border-gray-50 last:border-none group">
+                        <div className="w-9 h-9 rounded-full bg-gray-100 group-hover:bg-[#E4002B] flex items-center justify-center text-base shrink-0 transition-colors">
+                          <span className="group-hover:hidden">{sug.icon || '📍'}</span>
+                          <MapPin size={15} className="hidden group-hover:block text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-semibold text-gray-900 group-hover:text-[#E4002B] truncate transition-colors">
+                            {sug.main}
+                          </div>
+                          <div className="text-xs text-gray-400 truncate">{sug.sub}</div>
+                        </div>
+                        {sug.lat && (
+                          <span className="shrink-0 text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                            Exact Pin
+                          </span>
+                        )}
+                        <span className="shrink-0 text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200">
+                          Live
+                        </span>
+                      </button>
+                    ))}
+
+                    <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 text-[10px] text-gray-400 flex items-center gap-1.5">
+                      <Clock size={10} /> Powered by OpenStreetMap geocoding · Imagine IPS Coverage Engine
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <button type="submit"
+                className="h-14 rounded-full px-7 bg-[#E4002B] hover:bg-[#c40025] text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors shrink-0 shadow-md">
+                {state === 'loading' ? <Loader2 size={18} className="animate-spin" /> : 'Check Coverage'}
+              </button>
             </form>
           </div>
 
+          {/* ── Quick chips ── */}
+          <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 mb-4">
+            <span className="text-gray-400 font-medium">Try:</span>
+            {['Sandton', 'Rosebank', 'Benoni', 'Cape Town', 'Umhlanga', 'Pretoria', 'Midrand'].map((s) => (
+              <button key={s}
+                onClick={() => { setAddress(s); setShowSuggestions(false); runSearch(s); }}
+                className="px-3 py-1 rounded-full bg-gray-100 hover:bg-[#E4002B] hover:text-white text-gray-700 transition-colors font-medium">
+                {s}
+              </button>
+            ))}
+          </div>
+
+          {/* ── Results ── */}
           {state === 'done' && result?.available && (
-            <div className="mt-6 space-y-6">
-              {/* Active Coverage Info Banner */}
-              <div className="rounded-2xl bg-green-50 border border-green-200 p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="text-green-600 mt-0.5 shrink-0" size={24} />
-                  <div>
-                    <div className="font-display font-extrabold text-green-900 text-lg flex items-center gap-2">
-                      Fibre Line Live & Available!
-                      <span className="bg-green-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase">1000 Mbps Ready</span>
+            <div className="mt-2 space-y-5">
+
+              {/* Success banner */}
+              <div className="rounded-2xl bg-green-50 border border-green-200 p-5">
+                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="text-green-600 mt-0.5 shrink-0" size={24} />
+                    <div>
+                      <div className="font-extrabold text-green-900 text-base flex flex-wrap items-center gap-2">
+                        Imagine Fibre Available!
+                        <span className="bg-green-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full">1 Gbps Ready</span>
+                      </div>
+                      <div className="text-sm text-green-800 mt-0.5">📍 <strong>{result.area}</strong></div>
+                      <div className="text-xs text-green-700 mt-1">
+                        Speeds: <strong>{result.speeds}</strong>
+                        {coords && (
+                          <span className="ml-3 text-blue-700 font-mono">
+                            📌 {coords.lat.toFixed(5)}°, {coords.lng.toFixed(5)}°
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Network badges with brand colors */}
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {result.networks.map((n) => {
+                          const brand = NETWORK_BRANDS[n] || { bg: '#6b7280', text: '#fff', light: '#f3f4f6' };
+                          return (
+                            <span key={n}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border"
+                              style={{ background: brand.light, color: brand.bg, borderColor: brand.bg + '40' }}>
+                              <span className="w-2 h-2 rounded-full" style={{ background: brand.bg }} />
+                              {n}
+                            </span>
+                          );
+                        })}
+                      </div>
                     </div>
-                    <div className="text-sm text-green-800 mt-0.5">
-                      Address Pinned: <strong>{result.area}</strong>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 shrink-0">
+                    <button onClick={() => setShowPackages(!showPackages)}
+                      className="inline-flex items-center gap-2 rounded-full bg-[#E4002B] hover:bg-[#c40025] text-white h-11 px-5 text-sm font-bold transition-colors shadow-md">
+                      View Packages {showPackages ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                    </button>
+                    <a href="https://ataglance.imagine.co.za/cart.php" target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full bg-[#0f1720] hover:bg-black text-white h-11 px-5 text-xs font-bold transition-colors">
+                      Order Now <ArrowRight size={13} />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Inline packages */}
+                {showPackages && (
+                  <div className="mt-5 pt-5 border-t border-green-200">
+                    <div className="text-xs font-extrabold uppercase tracking-wider text-green-900 mb-3">
+                      Available Fibre Packages at {result.area}
                     </div>
-                    <div className="mt-2.5 flex flex-wrap gap-2">
-                      {result.networks.map((n) => (
-                        <span
-                          key={n}
-                          className="px-3 py-1 rounded-full bg-white border border-green-300 text-green-800 text-xs font-semibold flex items-center gap-1.5 shadow-sm"
-                        >
-                          <Wifi size={11} className="text-green-600" /> {n}
-                        </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                      {FIBRE_PACKAGES.map((pkg) => (
+                        <div key={pkg.speed}
+                          className={`relative rounded-2xl p-4 border-2 transition-all ${
+                            pkg.popular ? 'border-[#E4002B] bg-[#0f1720] text-white shadow-xl' : 'border-green-200 bg-white text-gray-900'
+                          }`}>
+                          {pkg.popular && (
+                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E4002B] text-white text-[9px] font-black px-3 py-0.5 rounded-full uppercase">
+                              Most Popular
+                            </div>
+                          )}
+                          <div className={`text-[10px] font-extrabold uppercase tracking-widest mb-1 ${pkg.popular ? 'text-red-400' : 'text-gray-400'}`}>
+                            {pkg.label}
+                          </div>
+                          <div className="flex items-baseline gap-0.5 mb-1">
+                            <span className={`text-3xl font-black ${pkg.popular ? 'text-white' : 'text-[#0f1720]'}`}>R{pkg.price}</span>
+                            <span className={`text-xs ml-1 ${pkg.popular ? 'text-gray-400' : 'text-gray-400'}`}>/mo</span>
+                          </div>
+                          <div className={`text-sm font-bold mb-3 flex items-center gap-1 ${pkg.popular ? 'text-red-300' : 'text-[#E4002B]'}`}>
+                            <Zap size={12} /> {pkg.speed} Mbps
+                          </div>
+                          <ul className="space-y-1.5 mb-4">
+                            {pkg.perks.map((p) => (
+                              <li key={p} className={`text-xs flex items-center gap-1.5 ${pkg.popular ? 'text-gray-300' : 'text-gray-600'}`}>
+                                <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" /> {p}
+                              </li>
+                            ))}
+                          </ul>
+                          <a href="https://ataglance.imagine.co.za/cart.php" target="_blank" rel="noopener noreferrer"
+                            className={`w-full py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-colors ${
+                              pkg.popular ? 'bg-[#E4002B] hover:bg-[#c40025] text-white' : 'bg-[#0f1720] hover:bg-black text-white'
+                            }`}>
+                            Order Now <ArrowRight size={11} />
+                          </a>
+                        </div>
                       ))}
                     </div>
+                    <div className="mt-3 text-center">
+                      <Link to="/connect/home" className="text-xs font-bold text-[#E4002B] hover:underline inline-flex items-center gap-1">
+                        See all packages & compare <ArrowRight size={11} />
+                      </Link>
+                    </div>
                   </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 shrink-0">
-                  <Button
-                    asChild
-                    className="rounded-full bg-[#E4002B] hover:bg-[#c40025] text-white h-11 px-5 shadow-md"
-                  >
-                    <Link to="/connect/home">
-                      View packages <ArrowRight size={15} className="ml-1" />
-                    </Link>
-                  </Button>
-                  <a
-                    href="https://ataglance.imagine.co.za/cart.php"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-full bg-[#0f1720] hover:bg-black text-white h-11 px-5 text-xs font-bold inline-flex items-center"
-                  >
-                    Order on Client Portal
-                  </a>
-                </div>
+                )}
               </div>
 
-              {/* Google Live Maps Card */}
-              <div className="relative rounded-3xl overflow-hidden border border-gray-200 bg-[#0f1720] text-white shadow-xl flex flex-col justify-between">
-                {/* Google Maps Controls Top Bar */}
-                <div className="bg-[#0f1720] p-4 flex flex-wrap justify-between items-center gap-3 border-b border-white/10 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse" />
-                    <span className="font-bold flex items-center gap-1.5 text-gray-200">
-                      <Navigation size={13} className="text-[#E4002B]" /> Google Live Map Pin: {result.queryAddress}
-                    </span>
+              {/* ── Google Live Map with exact pin ── */}
+              <div className="rounded-3xl overflow-hidden border border-gray-200 bg-[#0f1720] shadow-xl">
+                {/* Map toolbar */}
+                <div className="bg-[#0f1720] px-4 py-3 flex flex-wrap justify-between items-center gap-3 border-b border-white/10 text-xs">
+                  <div className="flex items-center gap-2 text-gray-200 font-semibold">
+                    <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                    <Navigation size={13} className="text-[#E4002B]" />
+                    <span className="truncate max-w-xs">{result.queryAddress}</span>
+                    {geoState === 'loading' && (
+                      <span className="flex items-center gap-1 text-yellow-400 text-[10px]">
+                        <Loader2 size={11} className="animate-spin" /> Pinpointing exact location…
+                      </span>
+                    )}
+                    {geoState === 'done' && coords && (
+                      <span className="flex items-center gap-1 text-green-400 text-[10px] font-mono">
+                        ✓ Exact Pin: {coords.lat.toFixed(4)}°S, {coords.lng.toFixed(4)}°E
+                      </span>
+                    )}
+                    {geoState === 'error' && (
+                      <span className="flex items-center gap-1 text-yellow-400 text-[10px]">
+                        <AlertCircle size={11} /> Approx. location shown
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1 bg-white/10 backdrop-blur-md p-1 rounded-xl border border-white/10">
-                      <button
-                        type="button"
-                        onClick={() => setMapMode('satellite')}
-                        className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-colors ${
-                          mapMode === 'satellite' ? 'bg-[#E4002B] text-white' : 'text-gray-300 hover:text-white'
-                        }`}
-                      >
-                        Google Satellite
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setMapMode('roadmap')}
-                        className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-colors ${
-                          mapMode === 'roadmap' ? 'bg-[#E4002B] text-white' : 'text-gray-300 hover:text-white'
-                        }`}
-                      >
-                        Google Roadmap
-                      </button>
+                    <div className="flex items-center gap-1 bg-white/10 p-1 rounded-xl border border-white/10">
+                      {['satellite', 'roadmap'].map((m) => (
+                        <button key={m} type="button" onClick={() => setMapMode(m)}
+                          className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-colors ${
+                            mapMode === m ? 'bg-[#E4002B] text-white' : 'text-gray-300 hover:text-white'
+                          }`}>
+                          {m === 'satellite' ? '🛰 Satellite' : '🗺 Roadmap'}
+                        </button>
+                      ))}
                     </div>
-
-                    <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(result.queryAddress + ' South Africa')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-[10px] flex items-center gap-1 border border-white/10 transition-colors"
-                    >
+                    <a href={getGoogleMapsLink()} target="_blank" rel="noopener noreferrer"
+                      className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-[10px] flex items-center gap-1 border border-white/10 transition-colors">
                       <Globe size={12} /> Open in Google Maps
                     </a>
                   </div>
                 </div>
 
-                {/* Google Live Map Iframe Embed */}
-                <div className="relative w-full h-[360px] bg-gray-900 overflow-hidden">
+                {/* Map iframe — uses exact lat/lng coordinates when geocoded */}
+                <div className="relative w-full h-[400px]">
                   <iframe
-                    title="Google Live Coverage Map"
-                    width="100%"
-                    height="100%"
-                    frameBorder="0"
-                    scrolling="no"
-                    marginHeight="0"
-                    marginWidth="0"
-                    src={`https://maps.google.com/maps?q=${encodeURIComponent(result.queryAddress + ', South Africa')}&t=${mapMode === 'satellite' ? 'k' : 'm'}&z=15&ie=UTF8&iwloc=&output=embed`}
-                    className="w-full h-full border-0 filter brightness-95"
+                    key={`${geoState}-${mapMode}`}
+                    title="Google Coverage Map"
+                    width="100%" height="100%"
+                    frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0"
+                    src={getMapSrc()}
+                    className="w-full h-full border-0"
                     loading="lazy"
+                    allowFullScreen
                   />
 
-                  {/* Floating Pin Badge Overlay */}
-                  <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md text-[#0f1720] px-4 py-2.5 rounded-2xl shadow-2xl border border-gray-100 flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#E4002B] text-white flex items-center justify-center shrink-0 shadow-md">
-                      <MapPin size={18} />
-                    </div>
-                    <div>
-                      <div className="text-xs font-black text-[#0f1720]">
-                        {result.area}
+                  {/* Exact coordinates badge overlay */}
+                  {coords && (
+                    <div className="absolute top-4 left-4 bg-white/97 backdrop-blur-md px-4 py-3 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 max-w-xs">
+                      <div className="w-10 h-10 rounded-xl bg-[#E4002B] text-white flex items-center justify-center shrink-0 shadow-md">
+                        <MapPin size={20} />
                       </div>
-                      <div className="text-[10px] text-green-700 font-bold flex items-center gap-1 mt-0.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" /> Imagine Fibre Line Pinned • 1 Gbps
+                      <div>
+                        <div className="text-xs font-black text-[#0f1720] truncate">{result.area}</div>
+                        <div className="text-[10px] text-green-700 font-bold flex items-center gap-1 mt-0.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" />
+                          Exact Pin Dropped
+                        </div>
+                        <div className="text-[10px] font-mono text-gray-500 mt-0.5">
+                          {coords.lat.toFixed(5)}, {coords.lng.toFixed(5)}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+
+                  {/* Geocoding loading overlay */}
+                  {geoState === 'loading' && (
+                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                      <div className="bg-white rounded-2xl px-6 py-4 flex items-center gap-3 shadow-xl">
+                        <Loader2 size={20} className="animate-spin text-[#E4002B]" />
+                        <span className="text-sm font-bold text-gray-700">Pinpointing exact address…</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {/* Google Map Footer Info */}
-                <div className="bg-[#0f1720] p-3.5 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs text-gray-300">
+                {/* Footer */}
+                <div className="bg-[#0f1720] px-4 py-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs text-gray-400">
                   <div className="flex items-center gap-2">
-                    <Sparkles size={13} className="text-[#E4002B]" />
-                    <span>Real-time Google Maps pin drop active for <strong>{result.queryAddress}</strong></span>
+                    <Sparkles size={12} className="text-[#E4002B]" />
+                    {coords
+                      ? <span>Exact geocoded pin for <strong className="text-gray-200">{result.queryAddress}</strong> via OpenStreetMap</span>
+                      : <span>Coverage pin for <strong className="text-gray-200">{result.queryAddress}</strong></span>
+                    }
                   </div>
-                  <div className="text-gray-400 text-[11px] font-mono">
-                    Google Maps Engine • Live Interactive View
-                  </div>
+                  <span className="font-mono text-[11px]">
+                    {coords ? `${coords.lat.toFixed(5)}°S · ${coords.lng.toFixed(5)}°E` : 'Google Maps Engine'}
+                  </span>
                 </div>
               </div>
             </div>
           )}
 
-          <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-gray-500">
-            Try searching any address:
-            {['158 Jan Smuts Ave', 'Sandton', 'Benoni', 'Cape Town', 'Umhlanga', 'Pretoria'].map(
-              (s) => (
-                <button
-                  key={s}
-                  onClick={() => setAddress(s)}
-                  className="px-2.5 py-1 rounded-full bg-gray-100 hover:bg-[#E4002B] hover:text-white transition-colors font-medium text-gray-700"
-                >
-                  {s}
-                </button>
-              )
-            )}
-          </div>
         </div>
       </div>
     </section>
