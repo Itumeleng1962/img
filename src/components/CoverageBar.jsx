@@ -96,13 +96,38 @@ const ADDRESS_BANK = [
   { main: 'Hatfield Square', sub: 'Hatfield, Pretoria, Tshwane', icon: '🎓' },
 ];
 
-/* ─── Fibre packages ────────────────────────────────────────────────────────  */
-const FIBRE_PACKAGES = [
-  { speed: '20/10', price: 449, label: 'Essential', popular: false, perks: ['Uncapped', 'Month-to-Month', 'Free Router'] },
-  { speed: '50/25', price: 599, label: 'Standard', popular: true, perks: ['Uncapped', 'Month-to-Month', 'Free Installation'] },
-  { speed: '100/50', price: 799, label: 'Pro', popular: false, perks: ['Uncapped', 'Priority Support', 'Free Router'] },
-  { speed: '200/200', price: 1199, label: 'Ultra', popular: false, perks: ['Symmetrical', 'Dedicated Support', '24/7 Desk'] },
+/* ─── Package tiers (same for every network) ──────────────────────────────── */
+const PACKAGE_TIERS = [
+  {
+    speed: '20/10', price: 449, label: 'Essential', popular: false,
+    perks: ['Uncapped & Unshaped', 'Month-to-Month', 'Free Router', 'Low Latency Gaming', 'Up to 4 Devices'],
+  },
+  {
+    speed: '50/25', price: 599, label: 'Standard', popular: true,
+    perks: ['Uncapped & Unshaped', 'Month-to-Month', 'Free Installation', '4K Streaming', 'Up to 8 Devices', 'Priority Routing'],
+  },
+  {
+    speed: '100/50', price: 799, label: 'Pro', popular: false,
+    perks: ['Uncapped & Unshaped', 'Month-to-Month', 'Free Router', 'Priority Support', 'Proactive Monitoring', 'Up to 15 Devices'],
+  },
+  {
+    speed: '200/200', price: 1199, label: 'Ultra', popular: false,
+    perks: ['Symmetrical Speeds', 'Month-to-Month', 'Dedicated Support', '24/7 Service Desk', 'Premium Router', 'Unlimited Devices', 'Static IP Option'],
+  },
 ];
+
+/* ─── Provider logo/branding lookup ─────────────────────────────────────────  */
+const PROVIDER_META = {
+  Vumatel:       { logo: '/logos/vumatel.png',   bg: '#FF6600', light: '#FFF3EB', text: '#FF6600', tagline: 'Nationwide · Up to 1 Gbps' },
+  Openserve:     { logo: '/logos/openserve.png', bg: '#005BAC', light: '#EBF3FF', text: '#005BAC', tagline: 'Widest Reach · Up to 1 Gbps' },
+  'Metro Fibre': { logo: '/logos/metrofibre.png',bg: '#6D28D9', light: '#F3EEFF', text: '#6D28D9', tagline: 'Metro Areas · Up to 500 Mbps' },
+  Frogfoot:      { logo: '/logos/frogfoot.png',  bg: '#10B981', light: '#EDFDF8', text: '#10B981', tagline: 'Cape & JHB · Up to 1 Gbps' },
+  Netstream:     { logo: '/logos/netstream.png', bg: '#0EA5E9', light: '#E0F5FF', text: '#0EA5E9', tagline: 'Community Networks · Up to 200 Mbps' },
+  DNATel:        { logo: null, bg: '#F59E0B', light: '#FFFBEB', text: '#F59E0B', tagline: 'East Rand · Up to 500 Mbps',  abbr: 'DNA' },
+  Evotel:        { logo: null, bg: '#EC4899', light: '#FFF0F8', text: '#EC4899', tagline: 'Suburban · Up to 200 Mbps',  abbr: 'EVO' },
+  MTN:           { logo: null, bg: '#1a1a1a',  light: '#FFFDE7', text: '#FFD700', tagline: 'Coming Soon · Up to 1 Gbps', abbr: 'MTN', comingSoon: true },
+};
+
 
 /* ─── Coverage lookup ───────────────────────────────────────────────────────  */
 export const checkCoverage = (address) => {
@@ -175,6 +200,7 @@ const CoverageBar = ({ compact = false }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [sugLoading, setSugLoading] = useState(false);
   const [showPackages, setShowPackages] = useState(false);
+  const [selectedNetwork, setSelectedNetwork] = useState(null);
 
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -243,6 +269,7 @@ const CoverageBar = ({ compact = false }) => {
     setResult(null);
     setCoords(null);
     setShowPackages(false);
+    setSelectedNetwork(null);
 
     // Coverage check (instant)
     const r = checkCoverage(q);
@@ -318,9 +345,6 @@ const CoverageBar = ({ compact = false }) => {
               <h3 className="font-display text-2xl md:text-3xl font-extrabold text-[#0f1720]">
                 See if Imagine Fibre is live at your address.
               </h3>
-              <p className="text-gray-500 mt-1 text-sm">
-                Type any address and we'll geocode the exact location and drop a real map pin.
-              </p>
             </div>
 
             {/* ── Search form ── */}
@@ -346,9 +370,9 @@ const CoverageBar = ({ compact = false }) => {
                 {/* ── Suggestions dropdown ── */}
                 {showSuggestions && (
                   <div ref={dropdownRef}
-                    className="absolute left-0 right-0 top-[62px] bg-white border border-gray-200 rounded-2xl shadow-2xl z-[999] overflow-hidden">
+                    className="absolute left-0 right-0 top-[62px] bg-white border border-gray-200 rounded-2xl shadow-2xl z-[999]">
 
-                    <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                    <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 flex justify-between items-center rounded-t-2xl">
                       <span className="text-[10px] uppercase font-extrabold tracking-wider text-gray-400 flex items-center gap-1.5">
                         <MapPin size={10} />
                         {sugLoading ? 'Searching addresses…' : address.length > 1 ? 'Live Results' : 'Popular Areas'}
@@ -365,29 +389,31 @@ const CoverageBar = ({ compact = false }) => {
                     {suggestions.map((sug, idx) => (
                       <button key={idx} type="button"
                         onMouseDown={(e) => { e.preventDefault(); handleSelectSuggestion(sug); }}
-                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors text-left border-b border-gray-50 last:border-none group">
-                        <div className="w-9 h-9 rounded-full bg-gray-100 group-hover:bg-[#E4002B] flex items-center justify-center text-base shrink-0 transition-colors">
+                        className="w-full flex items-start gap-3 px-4 py-3 hover:bg-red-50 transition-colors text-left border-b border-gray-50 last:border-none group">
+                        <div className="w-9 h-9 rounded-full bg-gray-100 group-hover:bg-[#E4002B] flex items-center justify-center text-base shrink-0 transition-colors mt-0.5">
                           <span className="group-hover:hidden">{sug.icon || '📍'}</span>
                           <MapPin size={15} className="hidden group-hover:block text-white" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="text-sm font-semibold text-gray-900 group-hover:text-[#E4002B] truncate transition-colors">
+                        <div className="flex-1">
+                          <div className="text-sm font-semibold text-gray-900 group-hover:text-[#E4002B] transition-colors">
                             {sug.main}
                           </div>
-                          <div className="text-xs text-gray-400 truncate">{sug.sub}</div>
+                          <div className="text-xs text-gray-400 leading-relaxed mt-0.5">{sug.full || sug.sub}</div>
                         </div>
-                        {sug.lat && (
-                          <span className="shrink-0 text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-                            Exact Pin
+                        <div className="flex flex-col gap-1 shrink-0 mt-0.5">
+                          {sug.lat && (
+                            <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                              Exact Pin
+                            </span>
+                          )}
+                          <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200">
+                            Live
                           </span>
-                        )}
-                        <span className="shrink-0 text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200">
-                          Live
-                        </span>
+                        </div>
                       </button>
                     ))}
 
-                    <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 text-[10px] text-gray-400 flex items-center gap-1.5">
+                    <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 text-[10px] text-gray-400 flex items-center gap-1.5 rounded-b-2xl">
                       <Clock size={10} /> Powered by OpenStreetMap geocoding · Imagine IPS Coverage Engine
                     </div>
                   </div>
@@ -401,17 +427,8 @@ const CoverageBar = ({ compact = false }) => {
             </form>
           </div>
 
-          {/* ── Quick chips ── */}
-          <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 mb-4">
-            <span className="text-gray-400 font-medium">Try:</span>
-            {['Sandton', 'Rosebank', 'Benoni', 'Cape Town', 'Umhlanga', 'Pretoria', 'Midrand'].map((s) => (
-              <button key={s}
-                onClick={() => { setAddress(s); setShowSuggestions(false); runSearch(s); }}
-                className="px-3 py-1 rounded-full bg-gray-100 hover:bg-[#E4002B] hover:text-white text-gray-700 transition-colors font-medium">
-                {s}
-              </button>
-            ))}
-          </div>
+
+
 
           {/* ── Results ── */}
           {state === 'done' && result?.available && (
@@ -455,7 +472,13 @@ const CoverageBar = ({ compact = false }) => {
                   </div>
 
                   <div className="flex flex-wrap gap-2 shrink-0">
-                    <button onClick={() => setShowPackages(!showPackages)}
+                    <button onClick={() => {
+                        const next = !showPackages;
+                        setShowPackages(next);
+                        if (next && !selectedNetwork && result?.networks?.length > 0) {
+                          setSelectedNetwork(result.networks[0]);
+                        }
+                      }}
                       className="inline-flex items-center gap-2 rounded-full bg-[#E4002B] hover:bg-[#c40025] text-white h-11 px-5 text-sm font-bold transition-colors shadow-md">
                       View Packages {showPackages ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                     </button>
@@ -466,56 +489,166 @@ const CoverageBar = ({ compact = false }) => {
                   </div>
                 </div>
 
-                {/* Inline packages */}
-                {showPackages && (
-                  <div className="mt-5 pt-5 border-t border-green-200">
-                    <div className="text-xs font-extrabold uppercase tracking-wider text-green-900 mb-3">
-                      Available Fibre Packages at {result.area}
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                      {FIBRE_PACKAGES.map((pkg) => (
-                        <div key={pkg.speed}
-                          className={`relative rounded-2xl p-4 border-2 transition-all ${
-                            pkg.popular ? 'border-[#E4002B] bg-[#0f1720] text-white shadow-xl' : 'border-green-200 bg-white text-gray-900'
-                          }`}>
-                          {pkg.popular && (
-                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E4002B] text-white text-[9px] font-black px-3 py-0.5 rounded-full uppercase">
-                              Most Popular
-                            </div>
-                          )}
-                          <div className={`text-[10px] font-extrabold uppercase tracking-widest mb-1 ${pkg.popular ? 'text-red-400' : 'text-gray-400'}`}>
-                            {pkg.label}
-                          </div>
-                          <div className="flex items-baseline gap-0.5 mb-1">
-                            <span className={`text-3xl font-black ${pkg.popular ? 'text-white' : 'text-[#0f1720]'}`}>R{pkg.price}</span>
-                            <span className={`text-xs ml-1 ${pkg.popular ? 'text-gray-400' : 'text-gray-400'}`}>/mo</span>
-                          </div>
-                          <div className={`text-sm font-bold mb-3 flex items-center gap-1 ${pkg.popular ? 'text-red-300' : 'text-[#E4002B]'}`}>
-                            <Zap size={12} /> {pkg.speed} Mbps
-                          </div>
-                          <ul className="space-y-1.5 mb-4">
-                            {pkg.perks.map((p) => (
-                              <li key={p} className={`text-xs flex items-center gap-1.5 ${pkg.popular ? 'text-gray-300' : 'text-gray-600'}`}>
-                                <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" /> {p}
-                              </li>
-                            ))}
-                          </ul>
-                          <a href="https://ataglance.imagine.co.za/cart.php" target="_blank" rel="noopener noreferrer"
-                            className={`w-full py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-colors ${
-                              pkg.popular ? 'bg-[#E4002B] hover:bg-[#c40025] text-white' : 'bg-[#0f1720] hover:bg-black text-white'
-                            }`}>
-                            Order Now <ArrowRight size={11} />
-                          </a>
+                {/* ── Packages with network tab selector ── */}
+                {showPackages && (() => {
+                  const activeMeta = PROVIDER_META[selectedNetwork] || {
+                    bg: '#6b7280', light: '#f3f4f6', text: '#6b7280',
+                    tagline: 'Fibre Network', abbr: (selectedNetwork || '???').slice(0, 3).toUpperCase(),
+                  };
+                  return (
+                    <div className="mt-5 pt-5 border-t border-green-200">
+
+                      {/* ── Network tab strip ── */}
+                      <div className="mb-5">
+                        <div className="text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-3">
+                          Select a network to view packages
                         </div>
-                      ))}
+                        <div className="flex flex-wrap gap-2">
+                          {result.networks.map((networkName) => {
+                            const m = PROVIDER_META[networkName] || { bg: '#6b7280', light: '#f3f4f6', logo: null, abbr: networkName.slice(0,3).toUpperCase() };
+                            const isActive = selectedNetwork === networkName;
+                            return (
+                              <button
+                                key={networkName}
+                                type="button"
+                                onClick={() => setSelectedNetwork(networkName)}
+                                className="flex items-center gap-2.5 px-3 py-2 rounded-2xl border-2 transition-all duration-200 cursor-pointer"
+                                style={{
+                                  borderColor: isActive ? m.bg : m.bg + '30',
+                                  background: isActive
+                                    ? `linear-gradient(135deg, ${m.bg}18 0%, ${m.light} 100%)`
+                                    : 'white',
+                                  boxShadow: isActive ? `0 0 0 3px ${m.bg}25` : 'none',
+                                  transform: isActive ? 'translateY(-1px)' : 'none',
+                                }}>
+                                {/* Logo thumbnail or abbr */}
+                                <div className="w-14 h-8 rounded-lg overflow-hidden flex items-center justify-center shrink-0"
+                                  style={{ background: m.logo ? 'white' : m.bg, border: `1px solid ${m.bg}20` }}>
+                                  {m.logo ? (
+                                    <img src={m.logo} alt={networkName} className="w-full h-full object-contain p-0.5" />
+                                  ) : (
+                                    <span className="text-[10px] font-black tracking-tight" style={{ color: m.text || '#fff' }}>
+                                      {m.abbr || networkName}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-left">
+                                  <div className="text-xs font-extrabold leading-tight" style={{ color: isActive ? m.bg : '#374151' }}>
+                                    {networkName}
+                                  </div>
+                                  {isActive && (
+                                    <div className="flex items-center gap-1 mt-0.5">
+                                      <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: m.comingSoon ? '#F59E0B' : '#22c55e' }} />
+                                      <span className="text-[9px] font-bold" style={{ color: m.comingSoon ? '#F59E0B' : '#16a34a' }}>
+                                        {m.comingSoon ? 'Coming Soon' : 'Live'}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* ── Active network header ── */}
+                      {selectedNetwork && (
+                        <div className="rounded-2xl border-2 overflow-hidden"
+                          style={{ borderColor: activeMeta.bg + '30' }}>
+
+                          <div className="flex items-center gap-4 px-5 py-4"
+                            style={{ background: `linear-gradient(135deg, ${activeMeta.bg}15 0%, ${activeMeta.light} 100%)`, borderBottom: `2px solid ${activeMeta.bg}20` }}>
+                            <div className="shrink-0 w-28 h-14 rounded-xl overflow-hidden flex items-center justify-center"
+                              style={{ background: activeMeta.logo ? 'white' : activeMeta.bg, border: `1px solid ${activeMeta.bg}30` }}>
+                              {activeMeta.logo ? (
+                                <img src={activeMeta.logo} alt={selectedNetwork} className="w-full h-full object-contain p-1" />
+                              ) : (
+                                <div className="flex flex-col items-center justify-center w-full h-full">
+                                  {activeMeta.comingSoon && <div className="text-[8px] font-black uppercase tracking-widest mb-0.5" style={{ color: activeMeta.text }}>COMING</div>}
+                                  <div className="font-black text-xl tracking-tight leading-none" style={{ color: activeMeta.text }}>{activeMeta.abbr || selectedNetwork}</div>
+                                  {activeMeta.comingSoon && <div className="text-[8px] font-black uppercase tracking-widest mt-0.5" style={{ color: activeMeta.text }}>SOON</div>}
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="font-extrabold text-lg leading-tight" style={{ color: activeMeta.bg }}>{selectedNetwork}</div>
+                              <div className="text-xs text-gray-500 mt-0.5">{activeMeta.tagline}</div>
+                              {activeMeta.comingSoon && (
+                                <span className="inline-block mt-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 border border-yellow-300">
+                                  Coming Soon — Pre-register Now
+                                </span>
+                              )}
+                            </div>
+                            <div className="shrink-0 hidden sm:flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: activeMeta.comingSoon ? '#F59E0B' : '#22c55e' }} />
+                              <span className="text-[10px] font-bold" style={{ color: activeMeta.comingSoon ? '#F59E0B' : '#16a34a' }}>
+                                {activeMeta.comingSoon ? 'Pre-register' : 'Live Network'}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Package cards */}
+                          <div className="p-4 bg-white">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                              {PACKAGE_TIERS.map((pkg) => (
+                                <div key={pkg.speed}
+                                  className={`relative rounded-2xl p-4 border-2 transition-all ${
+                                    pkg.popular ? 'bg-[#0f1720] text-white shadow-xl' : 'bg-gray-50 text-gray-900'
+                                  }`}
+                                  style={{ borderColor: pkg.popular ? activeMeta.bg : activeMeta.bg + '30' }}>
+
+                                  {pkg.popular && (
+                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-white text-[9px] font-black px-3 py-0.5 rounded-full uppercase whitespace-nowrap"
+                                      style={{ background: activeMeta.bg }}>
+                                      Most Popular
+                                    </div>
+                                  )}
+
+                                  {/* Network mini-badge */}
+                                  <div className="flex items-center gap-1 mb-2">
+                                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: activeMeta.bg }} />
+                                    <span className="text-[9px] font-extrabold uppercase tracking-widest"
+                                      style={{ color: pkg.popular ? '#9ca3af' : activeMeta.text }}>
+                                      {selectedNetwork}
+                                    </span>
+                                  </div>
+
+                                  <div className="text-[10px] font-extrabold uppercase tracking-widest mb-1 text-gray-400">{pkg.label}</div>
+                                  <div className="flex items-baseline gap-0.5 mb-1">
+                                    <span className={`text-3xl font-black ${pkg.popular ? 'text-white' : 'text-[#0f1720]'}`}>R{pkg.price}</span>
+                                    <span className="text-xs ml-1 text-gray-400">/mo</span>
+                                  </div>
+                                  <div className="text-sm font-bold mb-3 flex items-center gap-1" style={{ color: activeMeta.bg }}>
+                                    <Zap size={12} /> {pkg.speed} Mbps
+                                  </div>
+                                  <ul className="space-y-1.5 mb-4">
+                                    {pkg.perks.map((p) => (
+                                      <li key={p} className={`text-xs flex items-start gap-1.5 ${pkg.popular ? 'text-gray-300' : 'text-gray-600'}`}>
+                                        <span className="w-1.5 h-1.5 rounded-full mt-1 shrink-0" style={{ background: activeMeta.bg }} />
+                                        {p}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                  <a href="https://ataglance.imagine.co.za/cart.php" target="_blank" rel="noopener noreferrer"
+                                    className="w-full py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-opacity hover:opacity-80 text-white"
+                                    style={{ background: pkg.popular ? activeMeta.bg : '#0f1720' }}>
+                                    {activeMeta.comingSoon ? 'Pre-register' : 'Order Now'} <ArrowRight size={11} />
+                                  </a>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="mt-4 text-center">
+                        <Link to="/connect/home" className="text-xs font-bold text-[#E4002B] hover:underline inline-flex items-center gap-1">
+                          See all packages & compare <ArrowRight size={11} />
+                        </Link>
+                      </div>
                     </div>
-                    <div className="mt-3 text-center">
-                      <Link to="/connect/home" className="text-xs font-bold text-[#E4002B] hover:underline inline-flex items-center gap-1">
-                        See all packages & compare <ArrowRight size={11} />
-                      </Link>
-                    </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
 
               {/* ── Google Live Map with exact pin ── */}
