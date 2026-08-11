@@ -454,17 +454,43 @@ const CoverageBar = ({ compact = false }) => {
                         )}
                       </div>
 
-                      {/* Network badges with brand colors */}
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {result.networks.map((n) => {
-                          const brand = NETWORK_BRANDS[n] || { bg: '#6b7280', text: '#fff', light: '#f3f4f6' };
+                      {/* Interactive Network badges with logos */}
+                      <div className="mt-4 flex flex-wrap items-center gap-2">
+                        <span className="text-xs font-bold text-green-900 mr-1">Available Networks:</span>
+                        {result.networks.map((networkName) => {
+                          const m = PROVIDER_META[networkName] || { bg: '#6b7280', light: '#f3f4f6', logo: null, abbr: networkName.slice(0, 3).toUpperCase() };
+                          const isActive = showPackages && selectedNetwork === networkName;
                           return (
-                            <span key={n}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border"
-                              style={{ background: brand.light, color: brand.bg, borderColor: brand.bg + '40' }}>
-                              <span className="w-2 h-2 rounded-full" style={{ background: brand.bg }} />
-                              {n}
-                            </span>
+                            <button
+                              key={networkName}
+                              type="button"
+                              onClick={() => {
+                                setShowPackages(true);
+                                setSelectedNetwork(networkName);
+                              }}
+                              className="flex items-center gap-2 px-3 py-1.5 rounded-2xl border-2 transition-all duration-200 cursor-pointer hover:shadow-md"
+                              style={{
+                                borderColor: isActive ? m.bg : m.bg + '40',
+                                background: isActive
+                                  ? `linear-gradient(135deg, ${m.bg}20 0%, ${m.light} 100%)`
+                                  : 'white',
+                                boxShadow: isActive ? `0 0 0 3px ${m.bg}25` : 'none',
+                                transform: isActive ? 'scale(1.02)' : 'none',
+                              }}>
+                              {/* Logo thumbnail or abbr */}
+                              <div className="w-10 h-6 rounded-lg overflow-hidden flex items-center justify-center shrink-0 bg-white border border-gray-100">
+                                {m.logo ? (
+                                  <img src={m.logo} alt={networkName} className="w-full h-full object-contain p-0.5" />
+                                ) : (
+                                  <span className="text-[9px] font-black tracking-tight" style={{ color: m.bg }}>
+                                    {m.abbr || networkName}
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-xs font-extrabold" style={{ color: isActive ? m.bg : '#374151' }}>
+                                {networkName}
+                              </span>
+                            </button>
                           );
                         })}
                       </div>
@@ -489,7 +515,7 @@ const CoverageBar = ({ compact = false }) => {
                   </div>
                 </div>
 
-                {/* ── Packages with network tab selector ── */}
+                {/* ── Packages for selected network ── */}
                 {showPackages && (() => {
                   const activeMeta = PROVIDER_META[selectedNetwork] || {
                     bg: '#6b7280', light: '#f3f4f6', text: '#6b7280',
@@ -497,61 +523,7 @@ const CoverageBar = ({ compact = false }) => {
                   };
                   return (
                     <div className="mt-5 pt-5 border-t border-green-200">
-
-                      {/* ── Network tab strip ── */}
-                      <div className="mb-5">
-                        <div className="text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-3">
-                          Select a network to view packages
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {result.networks.map((networkName) => {
-                            const m = PROVIDER_META[networkName] || { bg: '#6b7280', light: '#f3f4f6', logo: null, abbr: networkName.slice(0,3).toUpperCase() };
-                            const isActive = selectedNetwork === networkName;
-                            return (
-                              <button
-                                key={networkName}
-                                type="button"
-                                onClick={() => setSelectedNetwork(networkName)}
-                                className="flex items-center gap-2.5 px-3 py-2 rounded-2xl border-2 transition-all duration-200 cursor-pointer"
-                                style={{
-                                  borderColor: isActive ? m.bg : m.bg + '30',
-                                  background: isActive
-                                    ? `linear-gradient(135deg, ${m.bg}18 0%, ${m.light} 100%)`
-                                    : 'white',
-                                  boxShadow: isActive ? `0 0 0 3px ${m.bg}25` : 'none',
-                                  transform: isActive ? 'translateY(-1px)' : 'none',
-                                }}>
-                                {/* Logo thumbnail or abbr */}
-                                <div className="w-14 h-8 rounded-lg overflow-hidden flex items-center justify-center shrink-0"
-                                  style={{ background: m.logo ? 'white' : m.bg, border: `1px solid ${m.bg}20` }}>
-                                  {m.logo ? (
-                                    <img src={m.logo} alt={networkName} className="w-full h-full object-contain p-0.5" />
-                                  ) : (
-                                    <span className="text-[10px] font-black tracking-tight" style={{ color: m.text || '#fff' }}>
-                                      {m.abbr || networkName}
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="text-left">
-                                  <div className="text-xs font-extrabold leading-tight" style={{ color: isActive ? m.bg : '#374151' }}>
-                                    {networkName}
-                                  </div>
-                                  {isActive && (
-                                    <div className="flex items-center gap-1 mt-0.5">
-                                      <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: m.comingSoon ? '#F59E0B' : '#22c55e' }} />
-                                      <span className="text-[9px] font-bold" style={{ color: m.comingSoon ? '#F59E0B' : '#16a34a' }}>
-                                        {m.comingSoon ? 'Coming Soon' : 'Live'}
-                                      </span>
-                                    </div>
-                                  )}
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* ── Active network header ── */}
+                      {/* Active network header & packages */}
                       {selectedNetwork && (
                         <div className="rounded-2xl border-2 overflow-hidden"
                           style={{ borderColor: activeMeta.bg + '30' }}>
