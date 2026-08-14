@@ -1,6 +1,290 @@
-// Mock data for Imagine IPS website scraped and synced from imagine.co.za
+export const providerLogos = {
+  frogfoot: 'https://www.frogfoot.com/wp-[#] /https://upload.wikimedia.org/wikipedia/commons/4/47/Frogfoot_Logo.png',
+  vumatel: 'https://vumatel.co.za/wp-content/uploads/2021/04/Vuma_Logo_Primary_RGB.png',
+};
+
+export const fibreProviders = [
+  {
+    id: 'frogfoot',
+    name: 'Frogfoot',
+    logoImg: '/logos/frogfoot.png',
+    logoSvg: (
+      <svg viewBox="0 0 200 60" className="w-full h-full object-contain">
+        {/* Frogfoot Authentic Logo Vector */}
+        <g transform="translate(10, 10)">
+          {/* Frog Footprint Icon */}
+          <circle cx="15" cy="12" r="5" fill="#00A859" />
+          <circle cx="28" cy="8" r="5" fill="#00A859" />
+          <circle cx="41" cy="12" r="5" fill="#00A859" />
+          <path d="M 16,22 C 16,17 40,17 40,22 C 40,35 16,35 16,22 Z" fill="#00A859" />
+          {/* Brand Text */}
+          <text x="52" y="28" fill="#111827" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="900" fontSize="22" letterSpacing="-0.5">frogfoot</text>
+          <text x="52" y="38" fill="#00A859" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="700" fontSize="9" letterSpacing="1">NETWORKS</text>
+        </g>
+      </svg>
+    ),
+    speedLimit: 'Up to 1000Mbps',
+    description: 'Super fast and reliable FTTH solutions on Frogfoot. All Imagine Frogfoot accounts are 100% Uncapped & Unshaped.',
+    installation: 'Free installation & setup to the value of R2500*',
+    activation: 'R499 activation fee (incl. VAT)',
+    router: 'Free to use Wi-Fi Router included',
+    cancellation: 'One calendar month notice required. Fee recovery applies if cancelled within 12 months.',
+    cabling: 'Standard setup includes cabling up to 30m. Additional cabling quoted by Frogfoot directly.',
+    coverageAreas: ['Blouberg (CPT)', 'Burgundy Estate', 'Century City', 'Constantia', 'Dainfern', 'De Zalze', 'Dunkley House', 'Broadacres', 'Hawaan Forest', 'Helderberg', 'Jonkershoek', 'Milnerton', 'Parklands', 'Parkview', 'Pretoria East', 'Sunningdale', 'Tableview', 'Tokai'],
+    telephonyInfo: 'Save up to 40% in call costs with Imagine VoIP over your Frogfoot line. No Telkom line needed, free number porting available.',
+    packages: [
+      { speed: '60/60 Mbps', price: 780, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '120/120 Mbps', price: 950, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '240/240 Mbps', price: 1120, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '400/400 Mbps', price: 1320, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '1000/1000 Mbps', price: 1725, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+    ],
+  },
+  {
+    id: 'vumatel',
+    name: 'Vumatel (Vuma)',
+    logoImg: '/logos/vumatel.png',
+    logoSvg: (
+      <svg viewBox="0 0 200 60" className="w-full h-full object-contain">
+        {/* Vumatel Authentic Logo Vector */}
+        <g transform="translate(10, 12)">
+          <text x="5" y="32" fill="#E6007E" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="900" fontSize="32" letterSpacing="-1">vuma</text>
+          <circle cx="108" cy="14" r="5" fill="#E6007E" />
+          <text x="118" y="32" fill="#374151" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="700" fontSize="16">tel</text>
+        </g>
+      </svg>
+    ),
+    speedLimit: 'Up to 1000Mbps',
+    description: 'Leading South African open access fibre network with symmetrical & asymmetrical packages.',
+    installation: 'Free installation covered initially by Imagine IPS (Value R1,725)*',
+    activation: 'R499 activation fee (Value R1,010 covered by Imagine)',
+    router: 'Free to use Wi-Fi Router included',
+    cancellation: 'One calendar month notice required. Installation (R1,725) & activation (R1,010) fees recovered if cancelled within 12 months.',
+    cabling: 'Standard underground/aerial fiber drop-in up to termination box included.',
+    coverageAreas: ['Johannesburg Metro', 'Cape Town Suburbs', 'Durban North & South', 'Pretoria', 'Gqeberha', 'Polokwane'],
+    telephonyInfo: 'Pair your Vuma line with Imagine Hosted PBX or Home VoIP starting from R49/pm with per-second billing.',
+    packages: [
+      { speed: '30/30 Mbps', price: 485, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '50/25 Mbps', price: 685, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '50/50 Mbps', price: 795, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '100/50 Mbps', price: 875, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '100/100 Mbps', price: 985, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '200/200 Mbps', price: 1135, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '500/200 Mbps', price: 1275, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '1000/250 Mbps', price: 1595, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '1000/500 Mbps', price: 2375, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+    ],
+  },
+  {
+    id: 'metrofibre',
+    name: 'MetroFibre (MFN)',
+    logoImg: '/logos/metrofibre.png',
+    logoSvg: (
+      <svg viewBox="0 0 220 60" className="w-full h-full object-contain">
+        {/* MetroFibre Authentic Logo Vector */}
+        <g transform="translate(10, 10)">
+          {/* Hexagon M icon */}
+          <polygon points="20,5 35,13 35,31 20,39 5,31 5,13" fill="#00529B" />
+          <path d="M 10,25 L 20,12 L 30,25 L 20,17 Z" fill="#ffffff" />
+          <text x="42" y="24" fill="#00529B" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="900" fontSize="19" letterSpacing="-0.5">METROFIBRE</text>
+          <text x="42" y="36" fill="#00A0E3" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="700" fontSize="10" letterSpacing="1.5">NETWORX</text>
+        </g>
+      </svg>
+    ),
+    speedLimit: 'Up to 1000Mbps',
+    description: 'High performance MetroFibre Networx connectivity for seamless video calling, gaming and 4K streaming.',
+    installation: 'Free installation & setup option available*',
+    activation: 'R499 activation fee',
+    router: 'Free to use Wi-Fi Router included',
+    cancellation: 'One calendar month notice required.',
+    cabling: 'Standard CPE installation included.',
+    coverageAreas: ['Gauteng Suburbs', 'Tshwane', 'KwaZulu-Natal Coast', 'Western Cape Central'],
+    telephonyInfo: 'Add an Imagine Crystal-Clear VoIP line with per-second billing and zero landline rental fees.',
+    packages: [
+      { speed: '25/25 Mbps', price: 535, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '45/45 Mbps', price: 719, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '75/75 Mbps', price: 827, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '150/150 Mbps', price: 895, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '250/250 Mbps', price: 965, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '500/500 Mbps', price: 1395, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '1000/200 Mbps', price: 1455, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+    ],
+  },
+  {
+    id: 'evotel',
+    name: 'Evotel',
+    logoSvg: (
+      <svg viewBox="0 0 200 60" className="w-full h-full object-contain">
+        {/* Evotel Authentic Logo Vector */}
+        <g transform="translate(10, 10)">
+          <path d="M 5,20 C 5,8 25,8 25,20 C 25,32 5,32 5,20 Z" fill="#F37023" />
+          <path d="M 12,20 L 18,14 L 18,26 Z" fill="#ffffff" />
+          <text x="32" y="27" fill="#1F2937" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="900" fontSize="26" letterSpacing="-0.5">evo</text>
+          <text x="73" y="27" fill="#F37023" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="900" fontSize="26" letterSpacing="-0.5">tel</text>
+        </g>
+      </svg>
+    ),
+    speedLimit: 'Up to 850Mbps',
+    description: 'Fast, reliable FTTH fibre solutions powered by Evotel network with zero fair usage caps.',
+    installation: 'Free installation and setup to the value of R2500*',
+    activation: 'R499 activation fee',
+    router: 'Free to use Wi-Fi Router included',
+    cancellation: 'One calendar month notice required.',
+    cabling: 'Standard drop cabling included up to 30m.',
+    coverageAreas: ['Regional Towns & Estates', 'Mpumalanga', 'North West', 'Gauteng Environs'],
+    telephonyInfo: 'Full Geographic Number Portability available. Keep your landline number when switching to Imagine VoIP.',
+    packages: [
+      { speed: '10/2 Mbps', price: 625, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '30/30 Mbps', price: 755, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '75/75 Mbps', price: 925, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '125/125 Mbps', price: 1085, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '300/300 Mbps', price: 1155, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '850/850 Mbps', price: 1465, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+    ],
+  },
+  {
+    id: 'ttconnect',
+    name: 'TT Connect',
+    logoSvg: (
+      <svg viewBox="0 0 220 60" className="w-full h-full object-contain">
+        {/* TT Connect Authentic Logo Vector */}
+        <g transform="translate(10, 10)">
+          <circle cx="18" cy="20" r="14" fill="none" stroke="#0097A7" strokeWidth="4" />
+          <circle cx="28" cy="20" r="8" fill="#0097A7" />
+          <text x="48" y="27" fill="#00838F" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="900" fontSize="22" letterSpacing="0">TT CONNECT</text>
+        </g>
+      </svg>
+    ),
+    speedLimit: 'Up to 850Mbps',
+    description: 'Ultra-fast month-to-month FTTH connectivity across TT Connect infrastructure.',
+    installation: 'Free installation & setup to the value of R2700*',
+    activation: 'R499 activation fee',
+    router: 'Free to use Wi-Fi Router included',
+    cancellation: 'One calendar month notice required.',
+    cabling: 'Standard trenching/drop cable included.',
+    coverageAreas: ['East Rand', 'Ekurhuleni Metro', 'Brakpan', 'Benoni', 'Springs'],
+    telephonyInfo: 'Connect your business or home with affordable VoIP calls over TT Connect infrastructure.',
+    packages: [
+      { speed: '30 Mbps', price: 775, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '50 Mbps', price: 985, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '100 Mbps', price: 1095, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '200 Mbps', price: 1325, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '400 Mbps', price: 1635, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '525 Mbps', price: 1855, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '850 Mbps', price: 2055, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+    ],
+  },
+  {
+    id: 'netstream',
+    name: 'Netstream',
+    logoImg: '/logos/netstream.png',
+    logoSvg: (
+      <svg viewBox="0 0 200 60" className="w-full h-full object-contain">
+        {/* Netstream Authentic Logo Vector */}
+        <g transform="translate(10, 10)">
+          <path d="M 5,25 Q 15,5 25,25 T 45,25" fill="none" stroke="#673AB7" strokeWidth="5" strokeLinecap="round" />
+          <text x="50" y="27" fill="#4A148C" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="900" fontSize="22">Netstream</text>
+        </g>
+      </svg>
+    ),
+    speedLimit: 'Up to 100Mbps',
+    description: 'Reliable high-speed fibre broadband on Netstream open access network.',
+    installation: 'Free installation and setup to the value of R2500*',
+    activation: 'R499 activation fee (incl. VAT)',
+    router: 'Free to use Wi-Fi Router included',
+    cancellation: 'One calendar month notice required.',
+    cabling: 'Standard fiber box entry setup.',
+    coverageAreas: ['Johannesburg South', 'Alberton', 'Meyerton', 'Vanderbijlpark'],
+    telephonyInfo: 'Pair your Netstream broadband with high-clarity Imagine VoIP phone lines.',
+    packages: [
+      { speed: '10/10 Mbps', price: 685, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '20/20 Mbps', price: 880, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '50/50 Mbps', price: 1130, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '100/100 Mbps', price: 1325, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+    ],
+  },
+  {
+    id: 'dna',
+    name: 'DNATel',
+    logoSvg: (
+      <svg viewBox="0 0 200 60" className="w-full h-full object-contain">
+        {/* DNATel Authentic Logo Vector */}
+        <g transform="translate(10, 10)">
+          <path d="M 10,8 C 25,20 5,25 20,35" stroke="#E53935" strokeWidth="4" fill="none" />
+          <path d="M 20,8 C 5,20 25,25 10,35" stroke="#1E88E5" strokeWidth="4" fill="none" />
+          <text x="32" y="27" fill="#111827" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="900" fontSize="24">dna</text>
+          <text x="75" y="27" fill="#E53935" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="900" fontSize="24">tel</text>
+        </g>
+      </svg>
+    ),
+    speedLimit: 'Up to 500Mbps',
+    description: 'Stable FTTH broadband via DNATel network with speeds tailored for all home requirements.',
+    installation: 'Installation & setup R499*',
+    activation: 'R499 activation fee',
+    router: 'Free to use Wi-Fi Router included',
+    cancellation: 'One calendar month notice required.',
+    cabling: 'Standard fibre optical network terminal installation.',
+    coverageAreas: ['Gauteng Gated Estates', 'Pretoria East', 'Midrand Complexes'],
+    telephonyInfo: 'Seamlessly port your telephone number to Imagine VoIP with zero downtime.',
+    packages: [
+      { speed: '10 Mbps', price: 625, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '30 Mbps', price: 655, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '50 Mbps', price: 795, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '100 Mbps', price: 925, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '200 Mbps', price: 995, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '500 Mbps', price: 1255, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+    ],
+  },
+  {
+    id: 'clear-access',
+    name: 'Clear Access',
+    logoSvg: (
+      <svg viewBox="0 0 220 60" className="w-full h-full object-contain">
+        {/* Clear Access Authentic Logo Vector */}
+        <g transform="translate(10, 10)">
+          <path d="M 5,28 A 16,16 0 0,1 27,10" stroke="#00A651" strokeWidth="4" fill="none" strokeLinecap="round" />
+          <path d="M 12,32 A 20,20 0 0,1 34,14" stroke="#0054A6" strokeWidth="4" fill="none" strokeLinecap="round" />
+          <text x="42" y="27" fill="#0054A6" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="900" fontSize="19">CLEAR</text>
+          <text x="110" y="27" fill="#00A651" fontFamily="'Outfit', 'Inter', sans-serif" fontWeight="900" fontSize="19">ACCESS</text>
+        </g>
+      </svg>
+    ),
+    speedLimit: 'Up to 500Mbps',
+    description: 'High-speed uncapped fibre connectivity across Clear Access residential network.',
+    installation: 'Free installation and setup to the value of R2500*',
+    activation: 'R499 activation fee',
+    router: 'Free to use Wi-Fi Router included',
+    cancellation: 'One calendar month notice required.',
+    cabling: 'Standard fiber box entry setup up to 30m.',
+    coverageAreas: ['Gauteng North', 'Centurion Estates', 'Midrand Gated Communities'],
+    telephonyInfo: 'Upgrade your communication with Imagine VoIP phone solutions.',
+    packages: [
+      { speed: '8 Mbps', price: 325, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '25 Mbps', price: 785, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '50 Mbps', price: 995, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '100 Mbps', price: 1145, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '200 Mbps', price: 1395, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+      { speed: '500 Mbps', price: 1985, term: 'Month to Month', type: 'Uncapped & Unshaped' },
+    ],
+  },
+];
 
 export const navLinks = [
+  {
+    label: 'Fibre',
+    to: '/services/fibre',
+    submenu: [
+      { label: 'All Fibre Packages', to: '/services/fibre' },
+      { label: 'Frogfoot Fibre', to: '/services/fibre#frogfoot' },
+      { label: 'Vumatel Fibre', to: '/services/fibre#vumatel' },
+      { label: 'MetroFibre', to: '/services/fibre#metrofibre' },
+      { label: 'Evotel Fibre', to: '/services/fibre#evotel' },
+      { label: 'TT Connect', to: '/services/fibre#ttconnect' },
+      { label: 'Netstream Fibre', to: '/services/fibre#netstream' },
+      { label: 'DNATel Fibre', to: '/services/fibre#dna' },
+      { label: 'Clear Access', to: '/services/fibre#clear-access' },
+    ],
+  },
   {
     label: 'Web Dev',
     to: '/services/webdev',
