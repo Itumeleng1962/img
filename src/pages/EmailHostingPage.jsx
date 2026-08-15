@@ -4,9 +4,9 @@ import { Mail, Shield, Check, ExternalLink, ArrowRight, Laptop, HelpCircle, Spar
 import { contactDetails } from '../mock';
 
 const EMAIL_PLANS = [
-  { name: 'Standard Mail', price: 'Free', storage: 'Plan Shared', desc: 'Included as standard in all Shared Web Hosting packages.', orderUrl: 'https://ataglance.imagine.co.za/cart.php' },
   { name: 'Premium Cloud Mail', price: 'R29', storage: '5GB SSD /box', desc: 'Larger separate inbox storage with advanced spam blocker.', orderUrl: 'https://ataglance.imagine.co.za/cart.php' },
-  { name: 'Corporate Pro Mail', price: 'R59', storage: '15GB SSD /box', desc: 'Large space corporate boxes with team collaboration calendars.', comingSoon: true, orderUrl: 'https://ataglance.imagine.co.za/cart.php' }
+  { name: 'Corporate Pro Mail', price: 'R59', storage: '15GB SSD /box', desc: 'Large space corporate boxes with team collaboration calendars.', comingSoon: true, orderUrl: 'https://ataglance.imagine.co.za/cart.php' },
+  { name: 'Custom Business Email', price: null, storage: 'Custom Storage', desc: 'Tailored mailbox solutions for larger organisations. Contact us for a quote.', isCustom: true, orderUrl: 'https://ataglance.imagine.co.za/cart.php' }
 ];
 
 export default function EmailHostingPage() {
@@ -53,8 +53,8 @@ export default function EmailHostingPage() {
                 <div>
                   <h3 className="font-extrabold text-sm text-gray-400 uppercase tracking-widest">{plan.name}</h3>
                   <div className="mt-3 flex items-baseline">
-                    <span className="text-3xl font-black text-[#0f1720]">{plan.price === 'Free' ? 'Free' : `R${plan.price}`}</span>
-                    {plan.price !== 'Free' && <span className="text-xs text-gray-400">/mo</span>}
+                    <span className="text-3xl font-black text-[#0f1720]">{plan.isCustom ? 'POA' : plan.price}</span>
+                    {!plan.isCustom && <span className="text-xs text-gray-400">/mo</span>}
                   </div>
                   <p className="text-xs text-gray-400 mt-1 font-semibold">{plan.storage}</p>
                   <p className="text-xs text-gray-500 mt-3 leading-relaxed">{plan.desc}</p>

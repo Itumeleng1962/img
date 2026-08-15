@@ -293,12 +293,6 @@ export const navLinks = [
     label: 'Domains',
     to: '/services/domains',
     badge: 'NEW',
-    submenu: [
-      { label: 'Domain Registration', to: '/services/domains' },
-      { label: 'Domain Transfer', to: '/services/transfer' },
-      { label: 'Domain Prices', to: '/services/domains' },
-      { label: 'WHOIS Lookup', to: '/services/domains' },
-    ],
   },
   {
     label: 'Hosting',
@@ -330,23 +324,13 @@ export const navLinks = [
     label: 'Security',
     to: '/services/security',
     badge: 'NEW',
-    submenu: [
-      { label: 'Domain Privacy', to: '/services/security' },
-      { label: 'Website Security', to: '/services/security' },
-      { label: 'Fix Hacked Website', to: '/services/security' },
-      { label: 'Cyber Insurance Advice', to: '/services/security' },
-      { label: '2FA Authentication', to: '/services/security' },
-    ],
   },
 
   {
     label: 'Support',
     to: '/services/support',
     submenu: [
-      { label: 'Network Status', to: '/services/support' },
-      { label: 'Announcements', to: '/news' },
-      { label: 'Knowledge Base', to: '/services/support' },
-      { label: 'Open Support Ticket', to: '/contact' },
+      { label: 'Open Support Ticket', to: 'https://ataglance.imagine.co.za/login' },
     ],
   },
 ];

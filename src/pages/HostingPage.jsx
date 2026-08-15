@@ -1,520 +1,953 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
-import { hostingPackages, contactDetails } from '../mock';
+import { contactDetails } from '../mock';
 import {
-  Check,
-  Server,
-  Globe,
-  Cpu,
-  Shield,
-  Zap,
-  Clock,
-  HardDrive,
-  Mail,
-  Database,
-  ChevronRight,
-  Star,
-  ArrowRight,
-  Phone,
-  Smartphone,
-  MousePointerClick,
-  MapPin,
-  Award,
-  RefreshCw,
-  Headphones,
-  CheckCircle,
+  Check, Server, Globe, Cpu, Shield, Zap, Clock, HardDrive, Mail, Database,
+  ChevronRight, Star, ArrowRight, Phone, Smartphone, Award, RefreshCw,
+  Headphones, CheckCircle, Cloud, Lock, Users, Gift, Layers, BarChart3,
+  MonitorSmartphone, Inbox, Settings, FileText, MapPin, ChevronDown, ChevronUp,
+  Sparkles,
 } from 'lucide-react';
 
-/* ─── Billing cycle ──────────────────────────────────────────────────────── */
-const CYCLES = [
-  { id: 'monthly', label: 'Monthly', factor: 1, badge: null },
-  { id: 'annual',  label: 'Annual',  factor: 10, badge: 'Save 2 months' },
-  { id: 'biennial',label: '2-Year',  factor: 18, badge: 'Best Value' },
+/* ─── Shared Hosting Plans ─────────────────────────────────────────────── */
+const SHARED_PLANS = [
+  {
+    name: 'STARTER', price: 'R99', period: '/month', tag: null,
+    desc: 'A simple hosting package for individuals, startups and small businesses.',
+    features: [
+      '5 GB NVMe storage', '10 GB monthly data transfer', '1 website',
+      '2 email accounts', '2 databases', '5 subdomains', '1 additional domain',
+      'Free SSL certificate', 'Website security', 'Daily backups',
+      'DNS management', 'File Manager', 'FTP access', '24/7 technical support',
+    ],
+    orderUrl: 'https://ataglance.imagine.co.za/cart.php',
+  },
+  {
+    name: 'BUSINESS', price: 'R199', period: '/month', tag: 'Most Popular', popular: true,
+    desc: 'A powerful hosting package for growing businesses and professional websites.',
+    features: [
+      '10 GB NVMe storage', '20 GB monthly data transfer', '1 website',
+      '5 email accounts', '5 databases', '10 subdomains', '5 additional domains',
+      'Free SSL certificate', 'Enhanced website security', 'Daily backups',
+      'Faster server performance', 'DNS management', 'File Manager', 'FTP access',
+      'Email management', '2-Factor Authentication', 'Free website migration',
+      '24/7 technical support',
+    ],
+    orderUrl: 'https://ataglance.imagine.co.za/cart.php',
+  },
+  {
+    name: 'PREMIUM', price: 'R399', period: '/month', tag: 'Best Value',
+    desc: 'Designed for businesses with larger websites and higher traffic.',
+    features: [
+      'Unlimited website storage*', 'Unlimited data transfer*', 'Unlimited websites*',
+      'Unlimited email accounts*', 'Unlimited databases*', 'Unlimited subdomains',
+      'Unlimited additional domains', 'Free SSL certificate', 'Advanced website security',
+      'Daily backups', 'High-performance servers', 'DNS management', 'File Manager',
+      'Email management', '2-Factor Authentication', 'Free website migration',
+      '24/7 technical support', '99.9% uptime guarantee',
+    ],
+    note: '*Fair-use and server resource limits may apply.',
+    orderUrl: 'https://ataglance.imagine.co.za/cart.php',
+  },
 ];
 
-/* ─── Why clients love section ───────────────────────────────────────────── */
+/* ─── VPS Plans ─────────────────────────────────────────────────────────── */
+const VPS_PLANS = [
+  {
+    name: 'STANDARD', price: 'POA',
+    desc: 'Suitable for small business websites, landing pages, personal websites, small applications, and low-traffic websites.',
+    specs: [
+      { label: 'CPU Cores', value: '2' },
+      { label: 'RAM', value: '1 GB' },
+      { label: 'NVMe Storage', value: '40 GB' },
+      { label: 'Data Transfer', value: '50 GB' },
+    ],
+    orderUrl: 'https://ataglance.imagine.co.za/cart.php',
+  },
+  {
+    name: 'BUSINESS', price: 'POA', popular: true,
+    desc: 'Suitable for growing business websites, e-commerce, business applications, customer portals, databases, and medium-traffic websites.',
+    specs: [
+      { label: 'CPU Cores', value: '4' },
+      { label: 'RAM', value: '4 GB' },
+      { label: 'NVMe Storage', value: '100 GB' },
+      { label: 'Data Transfer', value: '100 GB' },
+    ],
+    orderUrl: 'https://ataglance.imagine.co.za/cart.php',
+  },
+  {
+    name: 'PREMIUM', price: 'POA',
+    desc: 'Suitable for high-traffic websites, SaaS platforms, large business systems, enterprise applications, and high-performance databases.',
+    specs: [
+      { label: 'CPU Cores', value: '12' },
+      { label: 'RAM', value: '8 GB' },
+      { label: 'NVMe Storage', value: '500 GB' },
+      { label: 'Data Transfer', value: 'Unlimited' },
+    ],
+    orderUrl: 'https://ataglance.imagine.co.za/cart.php',
+  },
+];
+
+/* ─── VPS Feature table ─────────────────────────────────────────────────── */
+const VPS_TABLE_FEATURES = [
+  'Dedicated IP', 'Free SSL', 'Free Setup', 'Free Upgrades',
+  'IPv4 & IPv6', 'Full Root Access', '7-Day Guarantee',
+];
+
+/* ─── Hosting Technology ─────────────────────────────────────────────────── */
+const TECH_FEATURES = [
+  { icon: Server, title: 'Linux Hosting', desc: 'Reliable hosting for modern websites and applications.' },
+  { icon: Layers, title: 'Windows Hosting', desc: 'Hosting support for websites and applications that require a Windows environment.' },
+  { icon: Shield, title: 'CloudLinux', desc: 'Better server stability and resource management.' },
+  { icon: Zap, title: 'NVMe Storage', desc: 'High-speed storage for faster website loading and better performance.' },
+  { icon: BarChart3, title: 'LiteSpeed Servers', desc: 'Optimised servers designed to improve website speed and performance.' },
+  { icon: Database, title: 'MySQL Databases', desc: 'Reliable database hosting for websites and business applications.' },
+  { icon: Cpu, title: 'PHP Support', desc: 'Support for modern PHP-based websites and applications.' },
+  { icon: Globe, title: 'Multiple Dev Languages', desc: 'Support for different programming technologies and development environments.' },
+];
+
+/* ─── Why Choose ─────────────────────────────────────────────────────────── */
 const WHY_FEATURES = [
-  {
-    icon: MousePointerClick,
-    title: 'One-Click Install',
-    body: 'Plesk offers one-click install for many of the most popular CMS systems such as WordPress, Joomla and Drupal.',
-  },
-  {
-    icon: Cpu,
-    title: 'Simple Control',
-    body: 'The Plesk Control Panel allows for easy-to-use, intuitive setup, and simple management of your site for your convenience.',
-  },
-  {
-    icon: Smartphone,
-    title: 'Anywhere Management',
-    body: 'With an intuitive mobile management app, you can manage your site or check on your stats from almost anywhere.',
-  },
-  {
-    icon: Zap,
-    title: 'Superfast Servers',
-    body: 'SSD hosting offers superior speeds for your site, and fast site speed can help improve your Google ranking.',
-  },
-  {
-    icon: MapPin,
-    title: 'Local',
-    body: "Imagine is a South African company & our servers are hosted within SA. We've been hosting sites & servers since 1999.",
-  },
-  {
-    icon: Headphones,
-    title: 'Direct Specialist Access',
-    body: 'At Imagine you have direct access to the technicians who manage and maintain the hosting environment via telephone, help-desk email or live chat.',
-  },
+  { icon: Shield, title: 'No hidden charges', desc: 'Transparent pricing with no surprise fees.' },
+  { icon: Lock, title: 'Free SSL certificate', desc: 'Every plan comes with SSL protection included.' },
+  { icon: Headphones, title: '24/7 technical support', desc: 'Our team is available around the clock.' },
+  { icon: Zap, title: 'Fast and reliable servers', desc: 'High-performance NVMe server infrastructure.' },
+  { icon: Shield, title: 'Website security included', desc: 'DDoS protection, malware monitoring and more.' },
+  { icon: RefreshCw, title: 'Regular backups', desc: 'Daily backups to keep your data safe.' },
+  { icon: Award, title: '99.9% uptime guarantee', desc: 'Reliable hosting you can depend on.' },
+  { icon: Mail, title: 'Easy email management', desc: 'Create and manage business email accounts with ease.' },
+  { icon: ArrowRight, title: 'Free website migration', desc: 'We move your existing website to our servers for free.' },
+  { icon: Lock, title: 'Secure data connections', desc: 'FTP over SSL and secure server infrastructure.' },
+  { icon: CheckCircle, title: '30-day money-back guarantee', desc: 'Try our shared hosting risk-free.' },
 ];
 
-/* ─── Why Choose section ─────────────────────────────────────────────────── */
-const WHY_CHOOSE = [
-  {
-    icon: Award,
-    title: 'Over 20 Years in the Industry',
-    body: 'We have been in business since 1999 and have become a trusted internet service provider.',
-  },
-  {
-    icon: Shield,
-    title: 'Reliability & Reduced Downtime',
-    body: 'We offer you a 99.9% uptime guarantee with all web hosting.',
-  },
-  {
-    icon: Headphones,
-    title: 'Trusted After-Sales Support',
-    body: 'Our team is here to offer help and ensure that your website can run effortlessly.',
-  },
-  {
-    icon: Server,
-    title: 'Local Servers',
-    body: 'All our web hosting servers are located in South Africa, enabling the fastest possible speeds for South African websites.',
-  },
-  {
-    icon: RefreshCw,
-    title: 'Round the Clock Monitoring',
-    body: 'We monitor our web hosting environment 24/7.',
-  },
+/* ─── Section Tab navigation ─────────────────────────────────────────────── */
+const TABS = [
+  { id: 'shared', label: 'Web Hosting' },
+  { id: 'vps', label: 'Cloud & VPS' },
+  { id: 'reseller', label: 'Reseller Hosting' },
+  { id: 'microsoft', label: 'Microsoft 365' },
 ];
 
-/* ─── Component ──────────────────────────────────────────────────────────── */
 export default function HostingPage() {
-  const [cycle, setCycle] = useState('monthly');
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '' });
-  const [sent, setSent] = useState(false);
-
-  const priceFor = (base) => {
-    const c = CYCLES.find((x) => x.id === cycle);
-    if (cycle === 'monthly') return `R${base}`;
-    return `R${base * c.factor}`;
-  };
-  const termLabel = cycle === 'monthly' ? 'p/m' : cycle === 'annual' ? '/yr' : '/2yr';
-
-  const handleForm = (e) => {
-    e.preventDefault();
-    setSent(true);
-  };
+  const [activeTab, setActiveTab] = useState('shared');
 
   return (
     <Layout>
-
-      {/* ══════════════════════════════════════════════════════════════════
-          HERO
-      ══════════════════════════════════════════════════════════════════ */}
+      {/* ══ HERO ══════════════════════════════════════════════════════════ */}
       <section
-        className="relative overflow-hidden pt-28 pb-20 px-6 lg:px-10"
+        className="relative overflow-hidden pt-28 pb-20 px-6 lg:px-10 text-white"
         style={{ background: 'linear-gradient(135deg, #0d1f3c 0%, #1a3a6b 55%, #0d1f3c 100%)' }}
       >
-        {/* decorative blobs */}
         <span className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
           style={{ background: 'radial-gradient(circle, rgba(228,0,43,0.15) 0%, transparent 70%)', transform: 'translate(30%,-30%)' }} />
         <span className="absolute bottom-0 left-0 w-80 h-80 rounded-full pointer-events-none"
           style={{ background: 'radial-gradient(circle, rgba(228,0,43,0.10) 0%, transparent 70%)', transform: 'translate(-30%,30%)' }} />
 
-        <div className="relative max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-
-          {/* Copy */}
-          <div>
-            <span className="inline-flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full mb-5 border border-[#E4002B]/40 bg-[#E4002B]/10 text-red-400">
-              <Server size={12} /> Easy, Powerful Website Hosting
-            </span>
-
-            <h1 className="text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-5">
-              Fast, Local & Reliable<br />
-              <span className="text-[#E4002B]">Web Hosting</span>
-            </h1>
-
-            <p className="text-gray-300 text-lg leading-relaxed mb-6 max-w-xl">
-              Imagine IPS offers super fast, easy to manage website hosting solutions to suit
-              your needs and budget — including migration assistance, your own <strong className="text-white">.co.za domain</strong>,
-              emails, database functionality and more.
-            </p>
-
-            {/* Trust chips */}
-            <div className="flex flex-wrap gap-2.5 mb-8">
-              {[
-                '99.9% Uptime SSD Hosting',
-                'From only R69/month',
-                'Month-to-Month',
-                'SA Local Servers',
-                'Personal Support',
-              ].map((t) => (
-                <span key={t}
-                  className="flex items-center gap-1.5 bg-white/10 border border-white/10 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                  <Check size={11} className="text-green-400" /> {t}
-                </span>
-              ))}
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <a href="#plans"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white shadow-lg transition-opacity hover:opacity-90 bg-[#E4002B]">
-                View Plans <ChevronRight size={15} />
-              </a>
-              <a href={`mailto:${contactDetails.salesEmail}`}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white border border-white/25 hover:bg-white/10 transition-all">
-                <Phone size={15} /> Chat To Us
-              </a>
-            </div>
+        <div className="relative max-w-4xl mx-auto text-center space-y-6">
+          <span className="inline-flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full border border-[#E4002B]/40 bg-[#E4002B]/10 text-red-400">
+            <Server size={12} /> Reliable Hosting for Your Business
+          </span>
+          <h1 className="text-4xl lg:text-5xl font-extrabold leading-tight">
+            Fast, Secure &amp; Reliable<br />
+            <span className="text-[#E4002B]">Web Hosting Services</span>
+          </h1>
+          <p className="text-gray-300 text-base max-w-2xl mx-auto leading-relaxed">
+            Your website needs a safe, fast and reliable place to live. Our web hosting services give your business
+            the space, security and performance it needs to stay online — from startups to large online platforms.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <a href="#plans" className="bg-[#E4002B] hover:bg-[#c40025] px-6 py-3 rounded-xl font-bold text-sm inline-flex items-center gap-2 transition-colors shadow-lg">
+              View Hosting Plans <ChevronRight size={15} />
+            </a>
+            <a href={`mailto:${contactDetails.salesEmail}`} className="border border-white/25 hover:bg-white/10 px-6 py-3 rounded-xl font-bold text-sm inline-flex items-center gap-2 transition-all">
+              <Phone size={14} /> Contact Sales
+            </a>
           </div>
 
-          {/* Server rack visual */}
-          <div className="hidden md:flex justify-center items-center">
-            <div className="relative w-72 h-72">
-              <div className="absolute inset-0 rounded-3xl border border-white/10 p-5 space-y-2.5 overflow-hidden"
-                style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)' }}>
-                {/* fake server rows */}
-                {[...Array(7)].map((_, i) => (
-                  <div key={i} className="flex items-center gap-2.5 bg-white/5 rounded-lg px-3 py-2 border border-white/5">
-                    <span className="w-2 h-2 rounded-full shrink-0 animate-pulse"
-                      style={{ background: i % 3 === 0 ? '#E4002B' : '#4ade80', animationDelay: `${i * 0.25}s` }} />
-                    <div className="flex-1 space-y-1">
-                      <div className="h-1.5 bg-white/10 rounded-full w-3/4" />
-                    </div>
-                    <span className="text-[10px] font-mono text-blue-300">{9 + i * 3}ms</span>
-                  </div>
-                ))}
-              </div>
-              <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-40 h-6 blur-xl rounded-full"
-                style={{ background: '#E4002B', opacity: 0.3 }} />
-            </div>
+          {/* Trust chips */}
+          <div className="flex flex-wrap justify-center gap-2 pt-2">
+            {['No Hidden Charges', 'Free SSL Certificate', 'Free Website Migration', '99.9% Uptime', '30-Day Money-Back'].map((t) => (
+              <span key={t} className="flex items-center gap-1.5 bg-white/10 border border-white/10 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                <Check size={11} className="text-green-400" /> {t}
+              </span>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════════════════
-          BILLING TOGGLE
-      ══════════════════════════════════════════════════════════════════ */}
-      <div id="plans" className="bg-gray-50 pt-14 pb-0 text-center">
-        <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-3">Choose billing period</p>
-        <div className="inline-flex bg-white rounded-xl shadow border border-gray-200 p-1 gap-1">
-          {CYCLES.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => setCycle(c.id)}
-              className={`relative px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${
-                cycle === c.id ? 'text-white shadow-md' : 'text-gray-400 hover:text-gray-700'
-              }`}
-              style={cycle === c.id ? { background: '#0d1f3c' } : {}}
-            >
-              {c.label}
-              {c.badge && (
-                <span className="absolute -top-2.5 -right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white bg-[#E4002B]">
-                  {c.badge}
-                </span>
-              )}
-            </button>
-          ))}
+      {/* ══ TAB NAVIGATION ════════════════════════════════════════════════ */}
+      <div id="plans" className="bg-white border-b border-gray-200 sticky top-[64px] z-30">
+        <div className="max-w-6xl mx-auto px-6 lg:px-10">
+          <div className="flex overflow-x-auto gap-0 scrollbar-hide">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`shrink-0 px-6 py-4 text-sm font-bold border-b-2 transition-all ${
+                  activeTab === tab.id
+                    ? 'border-[#E4002B] text-[#E4002B]'
+                    : 'border-transparent text-gray-500 hover:text-gray-800'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* ══════════════════════════════════════════════════════════════════
-          PRICING CARDS
-      ══════════════════════════════════════════════════════════════════ */}
-      <section className="bg-gray-50 px-6 lg:px-10 py-10">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {hostingPackages.map((pkg) => (
-            <div
-              key={pkg.id}
-              className={`relative rounded-2xl flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
-                pkg.popular
-                  ? 'ring-2 shadow-2xl scale-[1.02]'
-                  : 'bg-white shadow border border-gray-200 hover:border-[#E4002B]/40'
-              }`}
-              style={pkg.popular ? {
-                background: 'linear-gradient(160deg, #0f1720 0%, #1a2736 100%)',
-                '--tw-ring-color': '#E4002B',
-              } : {}}
-            >
-              {pkg.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 text-[11px] font-extrabold text-white rounded-full uppercase tracking-widest bg-[#E4002B]">
-                  ★ Most Popular
-                </div>
-              )}
-
-              <div className="p-6 flex flex-col flex-1">
-                {/* Plan name */}
-                <div className={`text-xs font-bold uppercase tracking-widest mb-1 ${pkg.popular ? 'text-red-400' : 'text-gray-400'}`}>
-                  {pkg.name}
-                </div>
-
-                {/* Price */}
-                <div className="my-4">
-                  <div className="flex items-baseline gap-0.5">
-                    <span className={`text-4xl font-extrabold ${pkg.popular ? 'text-white' : 'text-gray-900'}`}>
-                      {priceFor(pkg.price)}
-                    </span>
-                    <span className={`text-sm font-semibold ml-1 ${pkg.popular ? 'text-gray-300' : 'text-gray-400'}`}>
-                      {termLabel}
-                    </span>
+      {/* ══ SHARED HOSTING SECTION ════════════════════════════════════════ */}
+      {activeTab === 'shared' && (
+        <>
+          {/* Why Choose */}
+          <section className="py-14 px-6 lg:px-10 bg-gray-50">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-10">
+                <h2 className="text-2xl font-black text-[#0f1720]">Why Choose Our Hosting?</h2>
+                <p className="text-xs text-gray-500 mt-1">Everything your website needs, built in as standard</p>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {WHY_FEATURES.map(({ icon: Icon, title, desc }) => (
+                  <div key={title} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex items-start gap-3 hover:shadow-md hover:border-[#E4002B]/30 transition-all">
+                    <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0 mt-0.5">
+                      <Icon size={15} className="text-[#E4002B]" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-[#0f1720]">{title}</p>
+                      <p className="text-[11px] text-gray-500 leading-relaxed mt-0.5">{desc}</p>
+                    </div>
                   </div>
-                  {cycle !== 'monthly' && (
-                    <p className={`text-xs mt-1 ${pkg.popular ? 'text-gray-300' : 'text-gray-400'}`}>
-                      R{pkg.price}p/m billed {cycle === 'annual' ? 'annually' : 'every 2 years'}
-                    </p>
-                  )}
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Hosting Plans */}
+          <section className="py-14 px-6 lg:px-10 bg-white">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-10">
+                <h2 className="text-2xl font-black text-[#0f1720]">Hosting Plans</h2>
+                <p className="text-sm text-gray-500 mt-2">Choose a package that matches the size of your business.</p>
+              </div>
+              <div className="grid md:grid-cols-3 gap-6">
+                {SHARED_PLANS.map((plan) => (
+                  <div
+                    key={plan.name}
+                    className={`relative rounded-2xl flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                      plan.popular
+                        ? 'ring-2 ring-[#E4002B] shadow-2xl scale-[1.02]'
+                        : 'bg-white border border-gray-200 shadow-sm hover:border-[#E4002B]/40'
+                    }`}
+                    style={plan.popular ? { background: 'linear-gradient(160deg, #0f1720 0%, #1a2736 100%)' } : {}}
+                  >
+                    {plan.tag && (
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 text-[11px] font-extrabold text-white rounded-full uppercase tracking-widest bg-[#E4002B]">
+                        ★ {plan.tag}
+                      </div>
+                    )}
+                    <div className="p-6 flex flex-col flex-1">
+                      <div className={`text-xs font-black uppercase tracking-widest mb-3 ${plan.popular ? 'text-red-400' : 'text-gray-400'}`}>
+                        {plan.name}
+                      </div>
+                      <div className="flex items-baseline gap-1 mb-1">
+                        <span className={`text-4xl font-extrabold ${plan.popular ? 'text-white' : 'text-[#0f1720]'}`}>{plan.price}</span>
+                        <span className={`text-sm ${plan.popular ? 'text-gray-300' : 'text-gray-400'}`}>{plan.period}</span>
+                      </div>
+                      <p className={`text-xs mt-1 mb-4 leading-relaxed ${plan.popular ? 'text-gray-300' : 'text-gray-500'}`}>{plan.desc}</p>
+                      <div className={`h-px mb-4 ${plan.popular ? 'bg-white/10' : 'bg-gray-100'}`} />
+                      <ul className="space-y-2 flex-1 mb-6">
+                        {plan.features.map((f) => (
+                          <li key={f} className="flex items-start gap-2 text-xs">
+                            <Check size={13} className="text-green-400 mt-0.5 shrink-0" />
+                            <span className={plan.popular ? 'text-gray-200' : 'text-gray-600'}>{f}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      {plan.note && (
+                        <p className={`text-[10px] mb-3 ${plan.popular ? 'text-gray-400' : 'text-gray-400'}`}>{plan.note}</p>
+                      )}
+                      <a
+                        href={plan.orderUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-3 rounded-xl text-center font-bold text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-md"
+                        style={plan.popular ? { background: '#E4002B', color: '#fff' } : { background: '#0f1720', color: '#fff' }}
+                      >
+                        Order on Client Portal <ArrowRight size={14} />
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Free Business Hosting */}
+          <section className="py-14 px-6 lg:px-10 bg-gradient-to-br from-[#0f1720] to-[#1a2736]">
+            <div className="max-w-5xl mx-auto">
+              <div className="flex flex-col md:flex-row items-center gap-10">
+                <div className="flex-1 text-white space-y-4">
+                  <span className="inline-block text-xs font-bold px-3 py-1.5 rounded-full border border-[#E4002B]/30 text-red-400 bg-[#E4002B]/10">
+                    🎁 FREE BUSINESS HOSTING
+                  </span>
+                  <h2 className="text-3xl font-black">Start Your Online Journey at No Cost</h2>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    Are you a new or small business that needs a website but does not have a large budget?
+                    We offer selected small businesses <strong className="text-white">free hosting for 12 months.</strong>
+                  </p>
+                  <a
+                    href={`mailto:${contactDetails.salesEmail}`}
+                    className="inline-flex items-center gap-2 bg-[#E4002B] hover:bg-[#c40025] text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors shadow-lg"
+                  >
+                    Apply for Free Hosting <ArrowRight size={14} />
+                  </a>
                 </div>
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-6 w-full md:w-72 space-y-3">
+                  <h3 className="text-white font-bold text-sm mb-4">Free Hosting Includes:</h3>
+                  {[
+                    '100 MB website storage',
+                    '1 website',
+                    'Free SSL certificate',
+                    'Basic website security',
+                    'Website management access',
+                    'Email support',
+                    'Reliable hosting',
+                    'No monthly hosting fee for 12 months',
+                  ].map((f) => (
+                    <div key={f} className="flex items-start gap-2 text-xs">
+                      <Check size={13} className="text-green-400 shrink-0 mt-0.5" />
+                      <span className="text-gray-300">{f}</span>
+                    </div>
+                  ))}
+                  <p className="text-[10px] text-gray-500 pt-2">*Terms and eligibility apply.</p>
+                </div>
+              </div>
+            </div>
+          </section>
 
-                {/* Divider */}
-                <div className={`h-px mb-5 ${pkg.popular ? 'bg-white/10' : 'bg-gray-100'}`} />
+          {/* Hosting Technology */}
+          <section className="py-14 px-6 lg:px-10 bg-gray-50">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-10">
+                <h2 className="text-2xl font-black text-[#0f1720]">Hosting Technology</h2>
+                <p className="text-xs text-gray-500 mt-1">We use modern hosting technology to help keep your website fast, secure and available.</p>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+                {TECH_FEATURES.map(({ icon: Icon, title, desc }) => (
+                  <div key={title} className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm text-center hover:shadow-md hover:border-[#E4002B]/30 transition-all">
+                    <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center mx-auto mb-3">
+                      <Icon size={20} className="text-[#E4002B]" />
+                    </div>
+                    <h3 className="font-bold text-xs text-[#0f1720] mb-1">{title}</h3>
+                    <p className="text-[11px] text-gray-500 leading-relaxed">{desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
 
-                {/* Feature list */}
-                <ul className="space-y-2.5 flex-1 mb-6 text-sm">
-                  {[pkg.storage, pkg.emails, pkg.databases, pkg.traffic, pkg.domain].map((feat) => (
-                    <li key={feat} className="flex items-start gap-2">
-                      <Check size={14} className="mt-0.5 shrink-0 text-green-400" />
-                      <span className={pkg.popular ? 'text-gray-200' : 'text-gray-600'}>{feat}</span>
-                    </li>
+          {/* Security + Migration + Custom Grid */}
+          <section className="py-14 px-6 lg:px-10 bg-white">
+            <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
+              {/* Security */}
+              <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center mb-4">
+                  <Shield size={20} className="text-[#E4002B]" />
+                </div>
+                <h3 className="font-extrabold text-sm text-[#0f1720] mb-3">Website Security</h3>
+                <ul className="space-y-2">
+                  {['Free SSL certificates','DDoS protection','Malware & security monitoring','Secure connections','Daily backups','FTP over SSL','Two-factor authentication','Secure server infrastructure','Regular security updates'].map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-xs text-gray-600"><Check size={12} className="text-green-500 shrink-0" />{f}</li>
                   ))}
                 </ul>
+              </div>
 
-                {/* CTA -> Client Portal */}
-                <a
-                  href={pkg.orderUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 rounded-xl text-center font-bold text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-md"
-                  style={pkg.popular
-                    ? { background: '#E4002B', color: '#fff' }
-                    : { background: '#0f1720', color: '#fff' }}
-                >
-                  ORDER ON CLIENT PORTAL <ArrowRight size={14} />
+              {/* Fast & Reliable */}
+              <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center mb-4">
+                  <Zap size={20} className="text-[#E4002B]" />
+                </div>
+                <h3 className="font-extrabold text-sm text-[#0f1720] mb-3">Fast &amp; Reliable Hosting</h3>
+                <p className="text-xs text-gray-500 leading-relaxed mb-3">A slow website can cost your business customers. Our hosting is designed to provide:</p>
+                <ul className="space-y-2">
+                  {['Fast website loading','High-performance NVMe storage','Reliable server infrastructure','Optimised server performance','Fast data transfer','99.9% uptime guarantee','Secure connections'].map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-xs text-gray-600"><Check size={12} className="text-green-500 shrink-0" />{f}</li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Migration */}
+              <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center mb-4">
+                  <RefreshCw size={20} className="text-[#E4002B]" />
+                </div>
+                <h3 className="font-extrabold text-sm text-[#0f1720] mb-3">Free Website Migration</h3>
+                <p className="text-xs text-gray-500 leading-relaxed mb-3">Our team can help you move your existing website to our servers with minimal disruption.</p>
+                <p className="text-xs font-bold text-gray-600 mb-2">Migration support includes:</p>
+                <ul className="space-y-2">
+                  {['Website files','Databases','Email accounts','DNS configuration','Domain settings','SSL configuration'].map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-xs text-gray-600"><Check size={12} className="text-green-500 shrink-0" />{f}</li>
+                  ))}
+                </ul>
+                <a href="https://ataglance.imagine.co.za/cart.php?a=add&domain=transfer" target="_blank" rel="noopener noreferrer" className="mt-4 w-full py-2.5 rounded-xl bg-[#E4002B] hover:bg-[#c40025] text-white font-bold text-xs text-center flex items-center justify-center gap-1.5 transition-colors">
+                  Migrate to Imagine <ArrowRight size={13} />
                 </a>
               </div>
             </div>
-          ))}
-        </div>
+          </section>
 
-        {/* Legal note */}
-        <div className="max-w-6xl mx-auto mt-6 text-xs text-gray-400 space-y-1 px-1">
-          <p>All prices include VAT.</p>
-          <p>*Unlimited usage is subject to reasonable and responsible usage. Imagine reserves the right to reduce usage in the case of extensive usage which shall be entirely at Imagine's discretion.</p>
-          <p>**Offer must be taken up when the hosting contract is started with Imagine.</p>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════
-          MIGRATION BANNER
-      ══════════════════════════════════════════════════════════════════ */}
-      <section className="py-12 px-6 lg:px-10 bg-white border-t border-b border-gray-100">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-16">
-          <div className="flex-1">
-            <h2 className="text-2xl font-extrabold mb-2 text-[#0f1720]">
-              Thinking of transferring to Imagine?
-            </h2>
-            <p className="text-gray-500 text-sm leading-relaxed">
-              If you're thinking about transferring a domain, a website, email or all three to Imagine we can help you.
-              Our technical team understand the intricacies of migrations and would be happy to help you migrate to us
-              with the least amount of effort, interruption and risk.
-            </p>
-          </div>
-          <a
-            href="https://ataglance.imagine.co.za/cart.php?a=add&domain=transfer"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm text-white shadow-lg transition-opacity hover:opacity-90 bg-[#E4002B]"
-          >
-            Transfer on Client Portal <ArrowRight size={15} />
-          </a>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════
-          WHY CLIENTS LOVE IMAGINE HOSTING
-      ══════════════════════════════════════════════════════════════════ */}
-      <section className="bg-gray-50 py-16 px-6 lg:px-10">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl lg:text-3xl font-extrabold text-center mb-2" style={{ color: '#0d1f3c' }}>
-            Why Clients Love Imagine Web Hosting
-          </h2>
-          <p className="text-center text-gray-400 text-sm mb-12">
-            Everything you need, built in as standard — no hidden extras
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {WHY_FEATURES.map(({ icon: Icon, title, body }) => (
-              <div key={title}
-                className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
-                  style={{ background: 'linear-gradient(135deg, #0d1f3c, #1a3a6b)' }}>
-                  <Icon size={20} style={{ color: '#E4002B' }} />
+          {/* Business Email + Custom Hosting */}
+          <section className="py-14 px-6 lg:px-10 bg-gray-50">
+            <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
+              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                <Mail size={24} className="text-[#E4002B] mb-3" />
+                <h3 className="font-extrabold text-lg text-[#0f1720] mb-2">Business Email Hosting</h3>
+                <p className="text-xs text-gray-500 leading-relaxed mb-4">Create professional email addresses using your business domain. Professional email helps your business look more trustworthy.</p>
+                <div className="space-y-1.5 mb-4">
+                  {['info@yourcompany.co.za','sales@yourcompany.co.za','support@yourcompany.co.za'].map((e) => (
+                    <div key={e} className="flex items-center gap-2 text-xs font-semibold text-[#0f1720] bg-gray-50 px-3 py-2 rounded-lg border border-gray-100">
+                      <Mail size={12} className="text-[#E4002B]" /> {e}
+                    </div>
+                  ))}
                 </div>
-                <h3 className="font-bold text-base mb-2" style={{ color: '#0d1f3c' }}>{title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{body}</p>
+                <Link to="/services/email" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#E4002B] hover:underline">
+                  View Email Plans <ArrowRight size={12} />
+                </Link>
               </div>
-            ))}
-          </div>
 
-          <div className="mt-10 text-center">
-            <a href={`mailto:${contactDetails.salesEmail}`}
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm text-white shadow-lg transition-opacity hover:opacity-90"
-              style={{ background: '#0d1f3c' }}>
-              Talk to a Hosting Specialist <ChevronRight size={15} />
+              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                <Server size={24} className="text-[#E4002B] mb-3" />
+                <h3 className="font-extrabold text-lg text-[#0f1720] mb-2">Need More Hosting Power?</h3>
+                <p className="text-xs text-gray-500 leading-relaxed mb-4">If your business needs more storage, higher performance, dedicated resources or a custom server environment, we can create a hosting solution specifically for you.</p>
+                <p className="text-xs font-bold text-gray-700 mb-2">Custom Hosting Suitable For:</p>
+                <ul className="grid grid-cols-2 gap-1.5 mb-4">
+                  {['Corporate websites','E-commerce platforms','Business applications','Customer portals','Learning platforms','Large databases','SaaS platforms','High-traffic websites'].map((u) => (
+                    <li key={u} className="flex items-center gap-1.5 text-xs text-gray-600">
+                      <Check size={11} className="text-green-500 shrink-0" /> {u}
+                    </li>
+                  ))}
+                </ul>
+                <a href={`mailto:${contactDetails.salesEmail}`} className="inline-flex items-center gap-1.5 text-xs font-bold text-[#E4002B] hover:underline">
+                  Get a Custom Quote <ArrowRight size={12} />
+                </a>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* ══ VPS / CLOUD SECTION ═══════════════════════════════════════════ */}
+      {activeTab === 'vps' && (
+        <>
+          <section className="py-14 px-6 lg:px-10 bg-gray-50">
+            <div className="max-w-6xl mx-auto space-y-10">
+              <div className="text-center">
+                <h2 className="text-2xl font-black text-[#0f1720]">Cloud &amp; VPS Hosting</h2>
+                <p className="text-sm text-gray-500 mt-2 max-w-2xl mx-auto">Keep your website, applications, and business systems fast, secure, and available with our reliable cloud and VPS hosting solutions.</p>
+              </div>
+
+              {/* Why Choose VPS */}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {[
+                  { icon: Zap, t: 'Fast & Reliable', d: 'High-performance server environment.' },
+                  { icon: Shield, t: 'Secure Hosting', d: 'SSL, firewall, and secure access controls.' },
+                  { icon: BarChart3, t: 'Flexible Resources', d: 'Scale as your business grows.' },
+                  { icon: Lock, t: 'Free SSL', d: 'SSL certificate included with every plan.' },
+                  { icon: CheckCircle, t: 'Free Setup', d: 'We handle the initial server setup.' },
+                  { icon: HardDrive, t: 'NVMe Storage', d: 'High-speed storage for top performance.' },
+                  { icon: Globe, t: 'Dedicated IP', d: 'IPv4 and IPv6 support included.' },
+                  { icon: Settings, t: 'Full Root Access', d: 'Complete control over your server.' },
+                ].map(({ icon: Icon, t, d }) => (
+                  <div key={t} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex items-start gap-3 hover:shadow-md hover:border-[#E4002B]/30 transition-all">
+                    <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0 mt-0.5">
+                      <Icon size={15} className="text-[#E4002B]" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-[#0f1720]">{t}</p>
+                      <p className="text-[11px] text-gray-500 mt-0.5">{d}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* VPS Plans */}
+              <div>
+                <h3 className="text-xl font-black text-[#0f1720] text-center mb-6">Choose Your VPS Hosting Plan</h3>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {VPS_PLANS.map((plan) => (
+                    <div
+                      key={plan.name}
+                      className={`relative rounded-2xl flex flex-col transition-all hover:-translate-y-1 hover:shadow-xl ${
+                        plan.popular
+                          ? 'ring-2 ring-[#E4002B] shadow-2xl scale-[1.02]'
+                          : 'bg-white border border-gray-200 shadow-sm hover:border-[#E4002B]/40'
+                      }`}
+                      style={plan.popular ? { background: 'linear-gradient(160deg, #0f1720 0%, #1a2736 100%)' } : {}}
+                    >
+                      {plan.popular && (
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 text-[11px] font-extrabold text-white rounded-full uppercase tracking-widest bg-[#E4002B]">
+                          ★ Most Popular
+                        </div>
+                      )}
+                      <div className="p-6 flex flex-col flex-1">
+                        <div className={`text-xs font-black uppercase tracking-widest mb-4 ${plan.popular ? 'text-red-400' : 'text-gray-400'}`}>{plan.name}</div>
+
+                        {/* Specs */}
+                        <div className="space-y-2 mb-4">
+                          {plan.specs.map((s) => (
+                            <div key={s.label} className={`flex justify-between items-center text-xs ${plan.popular ? 'text-gray-200' : 'text-gray-700'}`}>
+                              <span className={plan.popular ? 'text-gray-400' : 'text-gray-400'}>{s.label}</span>
+                              <span className="font-bold">{s.value}</span>
+                            </div>
+                          ))}
+                          {VPS_TABLE_FEATURES.map((f) => (
+                            <div key={f} className={`flex justify-between items-center text-xs ${plan.popular ? 'text-gray-200' : 'text-gray-700'}`}>
+                              <span className={plan.popular ? 'text-gray-400' : 'text-gray-400'}>{f}</span>
+                              <Check size={13} className="text-green-400" />
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className={`h-px mb-4 ${plan.popular ? 'bg-white/10' : 'bg-gray-100'}`} />
+                        <div className={`flex items-baseline gap-1 mb-3 ${plan.popular ? 'text-white' : 'text-[#0f1720]'}`}>
+                          <span className="text-3xl font-black">{plan.price}</span>
+                        </div>
+                        <p className={`text-xs leading-relaxed mb-4 flex-1 ${plan.popular ? 'text-gray-300' : 'text-gray-500'}`}>{plan.desc}</p>
+                        <a
+                          href={`mailto:${contactDetails.salesEmail}`}
+                          className="w-full py-3 rounded-xl text-center font-bold text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-md"
+                          style={plan.popular ? { background: '#E4002B', color: '#fff' } : { background: '#0f1720', color: '#fff' }}
+                        >
+                          Get a Quote <ArrowRight size={14} />
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Custom VPS */}
+              <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm text-center">
+                <Cloud size={32} className="text-[#E4002B] mx-auto mb-3" />
+                <h3 className="font-extrabold text-lg text-[#0f1720] mb-2">Need a Custom Cloud Server?</h3>
+                <p className="text-sm text-gray-500 max-w-2xl mx-auto mb-4">Every business is different. If you need more storage, RAM, CPU power, bandwidth, or security, we can build a cloud server package around your requirements.</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-w-xl mx-auto mb-6 text-left">
+                  {['High-performance CPUs','Increased RAM','Large NVMe storage','Dedicated IP addresses','High-speed bandwidth','Full root access','Advanced server security','Automated backups','Private cloud environments'].map((c) => (
+                    <div key={c} className="flex items-center gap-1.5 text-xs text-gray-600">
+                      <Check size={11} className="text-green-500 shrink-0" /> {c}
+                    </div>
+                  ))}
+                </div>
+                <a href={`mailto:${contactDetails.salesEmail}`} className="inline-flex items-center gap-2 bg-[#E4002B] hover:bg-[#c40025] text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors shadow-lg">
+                  Request Custom Solution <ArrowRight size={14} />
+                </a>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* ══ RESELLER HOSTING SECTION ══════════════════════════════════════ */}
+      {activeTab === 'reseller' && (
+        <>
+          <section className="py-14 px-6 lg:px-10 bg-gray-50">
+            <div className="max-w-6xl mx-auto space-y-12">
+              <div className="text-center">
+                <h2 className="text-2xl font-black text-[#0f1720]">Reseller Hosting</h2>
+                <p className="text-sm text-gray-500 mt-2 max-w-2xl mx-auto">
+                  Build your own hosting business with reliable, fast and affordable reseller hosting. Host websites for your clients and grow your business under your own brand.
+                </p>
+              </div>
+
+              {/* Why Reseller */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {[
+                  { icon: BarChart3, title: 'Grow Your Business', desc: 'Start selling web hosting without the cost of building your own hosting infrastructure.' },
+                  { icon: Server, title: 'Reliable Hosting', desc: 'Give your customers fast and stable hosting with modern NVMe storage and strong server performance.' },
+                  { icon: Settings, title: 'Easy Management', desc: 'Manage websites, domains, email accounts and hosting resources from one simple control panel.' },
+                  { icon: Star, title: 'More Profit', desc: 'Set your own prices and create hosting packages that work for your business.' },
+                  { icon: Headphones, title: 'Business Support', desc: 'Get technical support when you need help managing your hosting service.' },
+                  { icon: Globe, title: 'Custom DNS', desc: 'Use your own nameservers and present hosting under your own business brand.' },
+                ].map(({ icon: Icon, title, desc }) => (
+                  <div key={title} className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm flex gap-4 hover:shadow-md hover:border-[#E4002B]/30 transition-all">
+                    <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center shrink-0 mt-0.5">
+                      <Icon size={18} className="text-[#E4002B]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm text-[#0f1720] mb-1">{title}</h4>
+                      <p className="text-xs text-gray-500 leading-relaxed">{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Reseller Plans */}
+              <div>
+                <h3 className="text-xl font-black text-center text-[#0f1720] mb-6">Reseller Hosting Plans</h3>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {[
+                    {
+                      name: 'STANDARD', price: 'R650', popular: false,
+                      best: 'Best for: Up to 10 clients',
+                      features: ['50 GB NVMe Storage','10 Hosting Accounts','1 GB RAM','100 GB Monthly Bandwidth','Free SSL Certificates','100 Email Accounts','20 Databases','10 Addon Domains','10 Parked Domains','50 Subdomains','Website Security','DirectAdmin Control Panel','FTP Accounts','Domain Management','7-Day Money-Back Guarantee'],
+                    },
+                    {
+                      name: 'BUSINESS', price: 'R1,050', popular: true,
+                      best: 'Best for: Up to 20 clients',
+                      features: ['100 GB NVMe Storage','20 Hosting Accounts','2 GB RAM','200 GB Monthly Bandwidth','Free SSL Certificates','200 Email Accounts','50 Databases','20 Addon Domains','20 Parked Domains','100 Subdomains','Website Security','DirectAdmin Control Panel','FTP Accounts','Domain Management','Remote Backup Options','7-Day Money-Back Guarantee'],
+                    },
+                    {
+                      name: 'PREMIUM', price: 'R1,850', popular: false,
+                      best: 'Best for: Up to 100 clients',
+                      features: ['200 GB NVMe Storage','100 Hosting Accounts','4 GB RAM','Unlimited Monthly Bandwidth','Free SSL Certificates','Unlimited Email Accounts','Unlimited Databases','Unlimited Subdomains','Unlimited Addon Domains','Unlimited Parked Domains','Website Security','DirectAdmin Control Panel','FTP Accounts','Domain Management','Remote Backup Options','Custom DNS Name Servers','7-Day Money-Back Guarantee'],
+                    },
+                  ].map((plan) => (
+                    <div
+                      key={plan.name}
+                      className={`relative rounded-2xl flex flex-col transition-all hover:-translate-y-1 hover:shadow-xl ${
+                        plan.popular
+                          ? 'ring-2 ring-[#E4002B] shadow-2xl scale-[1.02]'
+                          : 'bg-white border border-gray-200 shadow-sm hover:border-[#E4002B]/40'
+                      }`}
+                      style={plan.popular ? { background: 'linear-gradient(160deg, #0f1720 0%, #1a2736 100%)' } : {}}
+                    >
+                      {plan.popular && (
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 text-[11px] font-extrabold text-white rounded-full uppercase tracking-widest bg-[#E4002B]">
+                          ★ Most Popular
+                        </div>
+                      )}
+                      <div className="p-6 flex flex-col flex-1">
+                        <div className={`text-xs font-black uppercase tracking-widest mb-2 ${plan.popular ? 'text-red-400' : 'text-gray-400'}`}>{plan.name}</div>
+                        <div className="flex items-baseline gap-1 mb-1">
+                          <span className={`text-4xl font-extrabold ${plan.popular ? 'text-white' : 'text-[#0f1720]'}`}>{plan.price}</span>
+                          <span className={`text-sm ${plan.popular ? 'text-gray-300' : 'text-gray-400'}`}>/month</span>
+                        </div>
+                        <p className={`text-xs font-semibold mt-1 mb-4 ${plan.popular ? 'text-red-300' : 'text-[#E4002B]'}`}>{plan.best}</p>
+                        <div className={`h-px mb-4 ${plan.popular ? 'bg-white/10' : 'bg-gray-100'}`} />
+                        <ul className="space-y-2 flex-1 mb-6">
+                          {plan.features.map((f) => (
+                            <li key={f} className="flex items-start gap-2 text-xs">
+                              <Check size={12} className="text-green-400 mt-0.5 shrink-0" />
+                              <span className={plan.popular ? 'text-gray-200' : 'text-gray-600'}>{f}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <a
+                          href="https://ataglance.imagine.co.za/cart.php"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-3 rounded-xl text-center font-bold text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-md"
+                          style={plan.popular ? { background: '#E4002B', color: '#fff' } : { background: '#0f1720', color: '#fff' }}
+                        >
+                          Order on Client Portal <ArrowRight size={14} />
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Email Hosting for Resellers */}
+              <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center shrink-0">
+                    <Mail size={24} className="text-[#E4002B]" />
+                  </div>
+                  <div>
+                    <h3 className="font-extrabold text-lg text-[#0f1720]">Email Hosting for Your Reseller Business</h3>
+                    <p className="text-xs text-gray-500 mt-1 max-w-2xl leading-relaxed">
+                      Give your customers professional business email that is secure, reliable and easy to manage. Offer email addresses using customers' own domain names while we provide the technology.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Feature table */}
+                  <div>
+                    <h4 className="font-bold text-sm text-[#0f1720] mb-3">Email Hosting Features</h4>
+                    <div className="space-y-2">
+                      {[
+                        ['Mailbox Storage', '30 GB per account'],
+                        ['Professional Email Address', '✓'],
+                        ['Custom Domain Email', '✓'],
+                        ['Webmail Access', '✓'],
+                        ['Mobile Email Support', '✓'],
+                        ['Outlook Support', '✓'],
+                        ['POP3 / IMAP / SMTP', '✓'],
+                        ['Email Forwarding', '✓'],
+                        ['Auto-Responders', '✓'],
+                        ['Calendar', '✓'],
+                        ['Spam Protection', '✓'],
+                        ['Brute-Force Protection', '✓'],
+                        ['DDoS Protection', '✓'],
+                        ['99.9% Uptime', '✓'],
+                      ].map(([label, value]) => (
+                        <div key={label} className="flex justify-between items-center text-xs border-b border-gray-50 pb-1.5">
+                          <span className="text-gray-600">{label}</span>
+                          <span className="font-bold text-[#0f1720]">{value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* What you can offer */}
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-bold text-sm text-[#0f1720] mb-2">You Can Offer Your Customers:</h4>
+                      <ul className="space-y-1.5">
+                        {['Business Email Hosting','Domain Email Accounts','Email Migration','Email Setup','Email Storage Upgrades','Email Management','Customer Email Support'].map((f) => (
+                          <li key={f} className="flex items-center gap-2 text-xs text-gray-600">
+                            <Check size={12} className="text-green-500 shrink-0" /> {f}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm text-[#0f1720] mb-2">Email Security Features:</h4>
+                      {[
+                        { title: 'Brute-Force Protection', desc: 'Helps protect accounts from repeated login attempts.' },
+                        { title: 'DDoS Protection', desc: 'Helps keep the email service available during network attacks.' },
+                        { title: 'Spam Protection', desc: 'Helps reduce unwanted and potentially harmful emails.' },
+                      ].map((s) => (
+                        <div key={s.title} className="mb-2">
+                          <p className="text-xs font-semibold text-[#0f1720]">{s.title}</p>
+                          <p className="text-xs text-gray-500">{s.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <a href={`mailto:${contactDetails.salesEmail}`} className="inline-flex items-center gap-2 bg-[#E4002B] hover:bg-[#c40025] text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-colors">
+                      Start Offering Email Hosting <ArrowRight size={13} />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Custom Reseller */}
+              <div className="bg-gradient-to-br from-[#0f1720] to-[#1a2736] rounded-2xl p-8 text-white text-center">
+                <h3 className="font-extrabold text-xl mb-2">Need a Custom Reseller Plan?</h3>
+                <p className="text-gray-300 text-sm max-w-xl mx-auto mb-4">Every business is different. If you need more storage, more hosting accounts, higher performance, or a custom setup, we can create a reseller package specifically for your business.</p>
+                <a href={`mailto:${contactDetails.salesEmail}`} className="inline-flex items-center gap-2 bg-[#E4002B] hover:bg-[#c40025] text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors shadow-lg">
+                  Contact Sales <ArrowRight size={14} />
+                </a>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* ══ MICROSOFT 365 SECTION ═════════════════════════════════════════ */}
+      {activeTab === 'microsoft' && (
+        <>
+          <section className="py-14 px-6 lg:px-10 bg-gray-50">
+            <div className="max-w-6xl mx-auto space-y-12">
+              <div className="text-center">
+                <h2 className="text-2xl font-black text-[#0f1720]">Microsoft 365 for Your Business</h2>
+                <p className="text-base font-semibold text-[#E4002B] mt-1">Work Better. Work Together. Work Securely.</p>
+                <p className="text-sm text-gray-500 mt-2 max-w-2xl mx-auto">
+                  Microsoft 365 gives your business the tools you need to communicate, manage files, work with your team and stay productive from anywhere.
+                </p>
+              </div>
+
+              {/* Why M365 */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {[
+                  { icon: Globe, t: 'Work from anywhere', d: 'Access your files and applications from your computer, tablet or phone.' },
+                  { icon: Users, t: 'Work as a team', d: 'Communicate and share files using Microsoft Teams and SharePoint.' },
+                  { icon: Cloud, t: 'Store files securely', d: 'Keep important business documents in OneDrive and SharePoint.' },
+                  { icon: FileText, t: 'Familiar Office tools', d: 'Work with Word, Excel, PowerPoint, Outlook and other Microsoft applications.' },
+                  { icon: Shield, t: 'Improve security', d: 'Protect your business accounts, information and devices.' },
+                  { icon: Zap, t: 'Save time', d: 'Reduce manual work and make everyday business tasks easier.' },
+                ].map(({ icon: Icon, t, d }) => (
+                  <div key={t} className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm flex gap-4 hover:shadow-md hover:border-[#E4002B]/30 transition-all">
+                    <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center shrink-0 mt-0.5">
+                      <Icon size={18} className="text-[#E4002B]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm text-[#0f1720] mb-1">{t}</h4>
+                      <p className="text-xs text-gray-500 leading-relaxed">{d}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* M365 Plans Table */}
+              <div>
+                <h3 className="text-xl font-black text-[#0f1720] text-center mb-6">Microsoft 365 Plans</h3>
+                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-gray-50 border-b border-gray-200">
+                          <th className="px-6 py-4 text-left text-xs font-extrabold text-gray-400 uppercase tracking-widest">Feature</th>
+                          <th className="px-6 py-4 text-center text-xs font-extrabold text-gray-400 uppercase tracking-widest">Standard</th>
+                          <th className="px-6 py-4 text-center text-xs font-extrabold text-[#E4002B] uppercase tracking-widest bg-red-50">Business</th>
+                          <th className="px-6 py-4 text-center text-xs font-extrabold text-gray-400 uppercase tracking-widest">Premium</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-50 text-xs text-gray-700">
+                        {[
+                          ['Business Email', '✓', '✓', '✓'],
+                          ['50 GB Mailbox', '✓', '✓', '✓'],
+                          ['OneDrive Storage', '1 TB', '1 TB', '1 TB'],
+                          ['Microsoft Word', 'Online', 'Desktop + Online', 'Desktop + Online'],
+                          ['Microsoft Excel', 'Online', 'Desktop + Online', 'Desktop + Online'],
+                          ['Microsoft PowerPoint', 'Online', 'Desktop + Online', 'Desktop + Online'],
+                          ['Microsoft Outlook', '✓', '✓', '✓'],
+                          ['Microsoft Teams', '✓', '✓', '✓'],
+                          ['SharePoint', '✓', '✓', '✓'],
+                          ['Mobile Apps', '✓', '✓', '✓'],
+                          ['Business Security', 'Standard', 'Standard', 'Advanced'],
+                          ['Device Management', '—', '—', '✓'],
+                          ['Advanced Threat Protection', '—', '—', '✓'],
+                          ['Data Protection', '—', '—', '✓'],
+                        ].map(([feat, s, b, p], i) => (
+                          <tr key={feat} className={i % 2 === 0 ? '' : 'bg-gray-50/50'}>
+                            <td className="px-6 py-3 font-semibold text-gray-700">{feat}</td>
+                            <td className="px-6 py-3 text-center text-gray-600">{s}</td>
+                            <td className="px-6 py-3 text-center font-semibold text-gray-700 bg-red-50/30">{b}</td>
+                            <td className="px-6 py-3 text-center text-gray-600">{p}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="px-6 py-3 bg-gray-50 border-t border-gray-100">
+                    <p className="text-[10px] text-gray-400">Pricing: Plans can be offered monthly or annually. Microsoft licensing prices may change based on the selected plan, currency exchange rates, taxes and Microsoft's current pricing.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* M365 Services */}
+              <div className="grid md:grid-cols-3 gap-6">
+                {[
+                  {
+                    icon: Settings, title: 'Microsoft 365 Setup',
+                    items: ['Microsoft 365 account creation','Business email setup','User account creation','Domain connection','DNS configuration','Microsoft Teams setup','OneDrive setup','SharePoint setup','Security configuration'],
+                  },
+                  {
+                    icon: Shield, title: 'Microsoft 365 Security',
+                    items: ['Multi-factor authentication','User access controls','Security policies','Data protection','Device management','Threat protection','Account monitoring'],
+                  },
+                  {
+                    icon: RefreshCw, title: 'Microsoft 365 Migration',
+                    items: ['Email migration','File migration','User account migration','DNS configuration','Minimal disruption','Teams setup','Calendar migration'],
+                  },
+                ].map(({ icon: Icon, title, items }) => (
+                  <div key={title} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                    <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center mb-3">
+                      <Icon size={18} className="text-[#E4002B]" />
+                    </div>
+                    <h4 className="font-extrabold text-sm text-[#0f1720] mb-3">{title}</h4>
+                    <ul className="space-y-1.5">
+                      {items.map((item) => (
+                        <li key={item} className="flex items-center gap-2 text-xs text-gray-600">
+                          <Check size={11} className="text-green-500 shrink-0" /> {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+
+              {/* Support tiers */}
+              <div>
+                <h3 className="text-xl font-black text-[#0f1720] text-center mb-6">Our Microsoft 365 Support Options</h3>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {[
+                    {
+                      name: 'Basic Support', popular: false,
+                      desc: 'Ideal for small businesses that need occasional assistance.',
+                      items: ['Microsoft 365 support','User assistance','Email support','Basic troubleshooting','Account assistance'],
+                    },
+                    {
+                      name: 'Business Support', popular: true,
+                      desc: 'Designed for businesses that rely on Microsoft 365 every day.',
+                      items: ['Microsoft 365 administration','User management','Security configuration','Teams support','OneDrive and SharePoint support','Email and DNS support','Regular system checks'],
+                    },
+                    {
+                      name: 'Premium Support', popular: false,
+                      desc: 'For businesses that need ongoing Microsoft 365 management.',
+                      items: ['Advanced security support','Device management','Security monitoring','Microsoft 365 optimisation','Data protection support','Priority technical assistance','Regular security reviews'],
+                    },
+                  ].map((tier) => (
+                    <div
+                      key={tier.name}
+                      className={`relative rounded-2xl p-6 flex flex-col transition-all hover:-translate-y-1 hover:shadow-xl ${
+                        tier.popular
+                          ? 'ring-2 ring-[#E4002B] shadow-xl'
+                          : 'bg-white border border-gray-200 shadow-sm hover:border-[#E4002B]/40'
+                      }`}
+                      style={tier.popular ? { background: 'linear-gradient(160deg, #0f1720 0%, #1a2736 100%)' } : {}}
+                    >
+                      {tier.popular && (
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 text-[11px] font-extrabold text-white rounded-full uppercase tracking-widest bg-[#E4002B]">
+                          ★ Recommended
+                        </div>
+                      )}
+                      <h4 className={`font-extrabold text-sm mb-2 ${tier.popular ? 'text-red-400' : 'text-gray-400'} uppercase tracking-widest`}>{tier.name}</h4>
+                      <p className={`text-xs mb-4 leading-relaxed ${tier.popular ? 'text-gray-300' : 'text-gray-500'}`}>{tier.desc}</p>
+                      <div className={`h-px mb-4 ${tier.popular ? 'bg-white/10' : 'bg-gray-100'}`} />
+                      <ul className="space-y-2 flex-1 mb-6">
+                        {tier.items.map((item) => (
+                          <li key={item} className="flex items-start gap-2 text-xs">
+                            <Check size={12} className="text-green-400 mt-0.5 shrink-0" />
+                            <span className={tier.popular ? 'text-gray-200' : 'text-gray-600'}>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <a
+                        href={`mailto:${contactDetails.salesEmail}`}
+                        className="w-full py-3 rounded-xl text-center font-bold text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-md"
+                        style={tier.popular ? { background: '#E4002B', color: '#fff' } : { background: '#0f1720', color: '#fff' }}
+                      >
+                        Get Started <ArrowRight size={14} />
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="bg-gradient-to-br from-[#0f1720] to-[#1a2736] rounded-2xl p-8 text-white text-center">
+                <h3 className="font-extrabold text-xl mb-2">Make Your Business More Productive</h3>
+                <p className="text-gray-300 text-sm max-w-xl mx-auto mb-2">With Microsoft 365, your team can communicate, share files, manage documents and work together from almost anywhere.</p>
+                <p className="text-sm font-bold text-white mb-4">Choose → Set Up → Secure → Train → Support</p>
+                <a href={`mailto:${contactDetails.salesEmail}`} className="inline-flex items-center gap-2 bg-[#E4002B] hover:bg-[#c40025] text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors shadow-lg">
+                  Contact Us Today <ArrowRight size={14} />
+                </a>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* ══ BOTTOM CTA ════════════════════════════════════════════════════ */}
+      <section className="py-12 px-6 lg:px-10 bg-white border-t border-gray-100">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-6 md:gap-16">
+          <div className="flex-1">
+            <h2 className="text-2xl font-extrabold text-[#0f1720] mb-2">Simple, Secure and Reliable Hosting</h2>
+            <p className="text-gray-500 text-sm leading-relaxed">Fast servers. Strong security. Reliable support. Business-ready hosting. Choose your hosting plan and get your business online today.</p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+            <a
+              href="https://ataglance.imagine.co.za/cart.php"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm text-white shadow-lg transition-opacity hover:opacity-90 bg-[#E4002B]"
+            >
+              Order on Client Portal <ArrowRight size={15} />
+            </a>
+            <a
+              href={`mailto:${contactDetails.salesEmail}`}
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm text-white shadow-sm border border-[#0f1720] bg-[#0f1720] hover:bg-[#1a2736] transition-all"
+            >
+              <Phone size={14} /> Contact Sales
             </a>
           </div>
         </div>
       </section>
-
-      {/* ══════════════════════════════════════════════════════════════════
-          WHY CHOOSE IMAGINE
-      ══════════════════════════════════════════════════════════════════ */}
-      <section className="bg-white py-16 px-6 lg:px-10">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl lg:text-3xl font-extrabold text-center mb-2" style={{ color: '#0d1f3c' }}>
-            Why Choose Imagine Web Hosting?
-          </h2>
-          <p className="text-center text-gray-400 text-sm mb-12">
-            Trusted by South African businesses since 1999
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {WHY_CHOOSE.map(({ icon: Icon, title, body }) => (
-              <div key={title} className="flex gap-4 p-5 rounded-2xl border border-gray-100 bg-gray-50 hover:border-orange-200 hover:bg-orange-50/30 transition-all">
-                <div className="w-10 h-10 shrink-0 rounded-xl flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, #0d1f3c, #1a3a6b)' }}>
-                  <Icon size={17} style={{ color: '#E4002B' }} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-sm mb-1" style={{ color: '#0d1f3c' }}>{title}</h3>
-                  <p className="text-xs text-gray-500 leading-relaxed">{body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════
-          CONTACT FORM
-      ══════════════════════════════════════════════════════════════════ */}
-      <section id="contact-form"
-        className="py-16 px-6 lg:px-10"
-        style={{ background: 'linear-gradient(135deg, #0d1f3c 0%, #1a3a6b 100%)' }}>
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-start">
-
-          {/* Left copy */}
-          <div className="text-white">
-            <h2 className="text-2xl lg:text-3xl font-extrabold mb-3">
-              Let's chat.
-            </h2>
-            <p className="text-blue-200 text-sm leading-relaxed mb-6">
-              If you still haven't found the exact thing you're looking for or if you're not quite sure
-              what you are looking for we would be happy to help. Fill out the form and we'll get right back to you.
-            </p>
-
-            <div className="space-y-4 text-sm text-blue-100">
-              <div className="flex items-center gap-3">
-                <Phone size={16} style={{ color: '#E4002B' }} />
-                <a href={`tel:${contactDetails.phone}`} className="hover:text-white transition-colors">
-                  {contactDetails.displayPhone}
-                </a>
-              </div>
-              <div className="flex items-center gap-3">
-                <Mail size={16} style={{ color: '#E4002B' }} />
-                <a href={`mailto:${contactDetails.salesEmail}`} className="hover:text-white transition-colors">
-                  {contactDetails.salesEmail}
-                </a>
-              </div>
-              <div className="flex items-start gap-3">
-                <MapPin size={16} className="mt-0.5 shrink-0" style={{ color: '#E4002B' }} />
-                <span>{contactDetails.address}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Form */}
-          <div className="bg-white rounded-2xl p-8 shadow-2xl">
-            {sent ? (
-              <div className="text-center py-8">
-                <CheckCircle size={48} className="mx-auto mb-4" style={{ color: '#E4002B' }} />
-                <h3 className="text-xl font-extrabold mb-2" style={{ color: '#0d1f3c' }}>Thank you!</h3>
-                <p className="text-gray-500 text-sm">We've received your enquiry and will be in touch shortly.</p>
-              </div>
-            ) : (
-              <>
-                <h3 className="text-lg font-extrabold mb-5" style={{ color: '#0d1f3c' }}>
-                  Imagine Website Hosting Services
-                </h3>
-                <form onSubmit={handleForm} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1">First Name</label>
-                      <input
-                        type="text"
-                        required
-                        value={form.firstName}
-                        onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-                        className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:border-orange-400 transition-all"
-                        style={{ '--tw-ring-color': '#E4002B' }}
-                        placeholder="First Name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1">Last Name</label>
-                      <input
-                        type="text"
-                        required
-                        value={form.lastName}
-                        onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-                        className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 transition-all"
-                        placeholder="Last Name"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1">E-mail</label>
-                    <input
-                      type="email"
-                      required
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 transition-all"
-                      placeholder="your@email.com"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1">Phone</label>
-                    <input
-                      type="tel"
-                      value={form.phone}
-                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                      className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 transition-all"
-                      placeholder="+27 11 000 0000"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full py-3.5 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-lg"
-                    style={{ background: '#E4002B' }}
-                  >
-                    Send Message <ArrowRight size={15} />
-                  </button>
-                </form>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
-
     </Layout>
   );
 }

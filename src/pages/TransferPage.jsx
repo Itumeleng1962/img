@@ -52,6 +52,18 @@ export default function TransferPage() {
               </a>
             </div>
           )}
+
+          {/* Direct transfer CTA */}
+          <div className="mt-4 flex justify-center">
+            <a
+              href="https://ataglance.imagine.co.za/cart.php?a=add&domain=transfer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-bold px-6 py-3 rounded-xl transition-all"
+            >
+              <RefreshCw size={15} /> Transfer a Domain on Client Portal <ArrowRight size={14} />
+            </a>
+          </div>
         </div>
       </section>
 
