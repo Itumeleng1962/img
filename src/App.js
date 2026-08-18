@@ -22,6 +22,7 @@ import SupportPage from './pages/SupportPage';
 import CoveragePage from './pages/CoveragePage';
 import NewsPage from './pages/NewsPage';
 import ContactPage from './pages/ContactPage';
+import ComingSoonPage from './pages/ComingSoonPage';
 import NotFoundPage from './pages/NotFoundPage';
 import './App.css';
 
@@ -51,6 +52,7 @@ function App() {
         <Route path="/coverage" element={<CoveragePage />} />
         <Route path="/news" element={<NewsPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/portal" element={<ComingSoonPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

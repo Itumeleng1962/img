@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { contactDetails } from '../mock';
 import {
@@ -131,7 +131,21 @@ const TABS = [
 ];
 
 export default function HostingPage() {
-  const [activeTab, setActiveTab] = useState('shared');
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const tabParam = params.get('tab');
+  const [activeTab, setActiveTab] = useState(
+    tabParam && ['shared','vps','reseller','microsoft'].includes(tabParam) ? tabParam : 'shared'
+  );
+
+  useEffect(() => {
+    const p = new URLSearchParams(location.search);
+    const t = p.get('tab');
+    if (t && ['shared','vps','reseller','microsoft'].includes(t)) {
+      setActiveTab(t);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [location.search]);
 
   return (
     <Layout>
