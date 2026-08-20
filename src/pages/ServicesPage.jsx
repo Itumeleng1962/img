@@ -41,10 +41,10 @@ const PRODUCT_CATALOG = [
     icon: Globe,
     desc: 'Register, transfer & secure your unique online identity.',
     items: [
-      { name: 'Domain Registration', desc: 'Secure your .co.za, .com, or .net domain name in seconds.', link: '/services/domains' },
+      { name: 'Domain Registration', desc: 'Secure your .co.za, .com, or .net domain name in seconds.', link: 'https://ataglance.imagine.co.za/login' },
       { name: 'Domain Transfer', desc: 'Consolidate registration and management under one local provider.', link: '/services/transfer' },
-      { name: 'Domain Prices', desc: 'Transparent local pricing matrix for registration and renewals.', link: '/services/domains' },
-      { name: 'WHOIS Lookup', desc: 'Lookup domain registration details and ownership statuses.', link: '/services/domains' }
+      { name: 'Domain Prices', desc: 'Transparent local pricing matrix for registration and renewals.', link: 'https://ataglance.imagine.co.za/login' },
+      { name: 'WHOIS Lookup', desc: 'Lookup domain registration details and ownership statuses.', link: 'https://ataglance.imagine.co.za/login' }
     ]
   },
   {

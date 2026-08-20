@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import ChatBot from './ChatBot';
 import { Toaster } from './ui/toaster';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -31,6 +32,7 @@ const Layout = ({ children }) => {
       <Header />
       <main>{children}</main>
       <Footer />
+      <ChatBot />
       <Toaster />
     </div>
   );

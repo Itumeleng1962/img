@@ -291,7 +291,7 @@ export const navLinks = [
   },
   {
     label: 'Domains',
-    to: '/services/domains',
+    to: 'https://ataglance.imagine.co.za/login',
     badge: 'NEW',
   },
   {

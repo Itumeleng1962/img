@@ -18,10 +18,10 @@ const catalogGroups = [
     title: 'Domains',
     badge: 'NEW',
     links: [
-      { label: 'Domain Registration', to: '/services/domains' },
+      { label: 'Domain Registration', to: 'https://ataglance.imagine.co.za/login' },
       { label: 'Domain Transfer', to: '/services/transfer' },
-      { label: 'Domain Prices', to: '/services/domains' },
-      { label: 'WHOIS Lookup', to: '/services/domains' },
+      { label: 'Domain Prices', to: 'https://ataglance.imagine.co.za/login' },
+      { label: 'WHOIS Lookup', to: 'https://ataglance.imagine.co.za/login' },
     ],
   },
   {
